@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1 — 2026-10-12
+
+- Normalize ZIP member ordering and platform metadata so Windows and Linux builds are byte-for-byte identical. 1.1.0 package contents matched across platforms, but their ZIP metadata/order differed. Translation behavior is unchanged.
+
 ## 1.1.0 — 2026-10-12
 
 First public open-source release.

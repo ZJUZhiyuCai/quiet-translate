@@ -15,6 +15,8 @@ for browser in ['chromium', 'firefox']:
     assert hashlib.sha256(target.read_bytes()).hexdigest() == before, 'Non-reproducible package'
     with zipfile.ZipFile(target) as archive:
         assert set(archive.namelist()) == expected, 'Unexpected package file'
+        assert archive.namelist() == sorted(expected), 'Archive order must be independent of the host OS'
+        assert all(info.create_system == 3 for info in archive.infolist()), 'Archive platform metadata must be normalized'
         assert json.loads(archive.read('bootstrap.json')) == {}, 'Nonempty public bootstrap'
         manifest = json.loads(archive.read('manifest.json'))
         assert not manifest.get('host_permissions'), 'No provider hosts may be hardcoded'

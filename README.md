@@ -10,7 +10,7 @@ English · [简体中文](README.zh-CN.md)
 
 [![CI](https://github.com/ZJUZhiyuCai/quiet-translate/actions/workflows/ci.yml/badge.svg)](https://github.com/ZJUZhiyuCai/quiet-translate/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-397965.svg)](LICENSE)
 
-[**Download v1.1.0**](https://github.com/ZJUZhiyuCai/quiet-translate/releases/latest) · [Installation](docs/BROWSERS.md) · [Connect your API](docs/PROVIDERS.md) · [Report a bug](https://github.com/ZJUZhiyuCai/quiet-translate/issues/new/choose)
+[**Download v1.1.1**](https://github.com/ZJUZhiyuCai/quiet-translate/releases/latest) · [Installation](docs/BROWSERS.md) · [Connect your API](docs/PROVIDERS.md) · [Report a bug](https://github.com/ZJUZhiyuCai/quiet-translate/issues/new/choose)
 
 ![Bilingual reading on an original demo article](docs/assets/bilingual.png)
 

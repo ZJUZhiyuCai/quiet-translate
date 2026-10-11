@@ -23,7 +23,7 @@ def build(browser):
     destination.mkdir(parents=True, exist_ok=True)
     archive_path = ROOT / 'dist' / f'quiet-translate-{version}-{browser}.zip'
     with zipfile.ZipFile(archive_path, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
-        for path in sorted(SOURCE.rglob('*')):
+        for path in sorted(SOURCE.rglob('*'), key=lambda p: p.relative_to(SOURCE).as_posix()):
             if not path.is_file():
                 continue
             relative = path.relative_to(SOURCE)
@@ -34,6 +34,7 @@ def build(browser):
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(data)
             info = zipfile.ZipInfo(relative.as_posix(), date_time=(2026, 1, 1, 0, 0, 0))
+            info.create_system = 3  # Normalize the ZIP platform flag on Windows and Unix.
             info.compress_type = zipfile.ZIP_DEFLATED
             info.external_attr = 0o100644 << 16
             archive.writestr(info, data)
