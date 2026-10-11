@@ -43,4 +43,4 @@ def build(browser):
 
 if __name__ == '__main__':
     checksums = [build(browser) for browser in ['chromium', 'firefox']]
-    (ROOT / 'dist' / 'SHA256SUMS.txt').write_text('\n'.join(checksums) + '\n', encoding='utf-8')
+    (ROOT / 'dist' / 'SHA256SUMS.txt').write_bytes(('\n'.join(checksums) + '\n').encode('utf-8'))
