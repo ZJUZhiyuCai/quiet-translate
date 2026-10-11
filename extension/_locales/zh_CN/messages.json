@@ -1,0 +1,20 @@
+{
+  "name": {
+    "message": "轻译 · Quiet Translate"
+  },
+  "description": {
+    "message": "原文留在眼前，译文恰好在下面。自带 API 的双语阅读、划线翻译与长文翻译。"
+  },
+  "action": {
+    "message": "轻译 · 双语阅读"
+  },
+  "toggle_page": {
+    "message": "翻译网页 / 恢复原文"
+  },
+  "translate_selection": {
+    "message": "翻译选中文字"
+  },
+  "open_workspace": {
+    "message": "打开长文翻译"
+  }
+}

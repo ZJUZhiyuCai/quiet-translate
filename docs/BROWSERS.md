@@ -1,0 +1,41 @@
+# Browser support & installation
+
+The release contains two builds from the same source. They use browser Promise APIs and distinct Manifest V3 background configurations. No account with this project is needed.
+
+| Browser | Package | Validation on Windows, 2026-10-12 |
+|---|---|---|
+| Chrome | `chromium.zip` | 154.0.8037.99: 24 stress/interaction + 12 layout regressions passed |
+| Edge | `chromium.zip` | 156.0.4314.15: the same 36 checks passed |
+| Comet | `chromium.zip` | 139.1.7258.19069: the same 36 checks passed; live model/site testing also recorded |
+| Brave | `chromium.zip` | Chromium-compatible build; not independently run in this release |
+| Firefox desktop | `firefox.zip` | 157.0.1: 9 end-to-end checks passed, including onboarding, streaming, page restoration, and long text |
+| Safari | None yet | Requires a separate macOS/Xcode packaging and validation pass |
+| Mobile browsers | None claimed | Touch selection, layout, and background lifecycle have not been validated |
+
+Chromium minimum: 120. Firefox minimum: 142. Modern desktop versions are recommended. Linux CI runs additional browser checks; macOS is not yet independently validated. Store submission and signing are separate from a working developer build.
+
+## Chromium: Chrome, Edge, Brave, Comet
+
+1. Download the Chromium ZIP from [Releases](https://github.com/ZJUZhiyuCai/quiet-translate/releases/latest) and extract it into a permanent folder.
+2. Open your browser's Extensions page: `chrome://extensions` in Chrome/Comet, `edge://extensions` in Edge, or `brave://extensions` in Brave.
+3. Enable Developer mode, choose **Load unpacked**, and select the extracted folder containing `manifest.json`.
+4. Preferences opens on first installation. Enter the API base URL, model ID, and your own API key. Save, allow the requested API host, then test the saved connection.
+5. Pin the extension if desired. Refresh pages that were already open before installation.
+
+To update, extract the new version over the same folder, click Reload on its extension card, and refresh existing pages. Keep the installation folder in place. The public ZIP has no credentials and will not configure an account for you.
+
+## Firefox desktop
+
+1. Extract the Firefox ZIP.
+2. Open `about:debugging` → **This Firefox** → **Load Temporary Add-on**.
+3. Select the extracted `manifest.json`, then configure your API in Preferences.
+
+This release is **unsigned**. Temporary add-ons are removed when Firefox restarts. Persistent consumer installation requires Mozilla signing/AMO distribution; it is not included or claimed here. Do not disable browser signature verification. Development instructions follow [Mozilla's temporary-installation documentation](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/).
+
+Firefox's build uses module background scripts because Firefox does not implement MV3 `background.service_worker` as Chromium does. See [MDN background compatibility](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/background). Data-transmission categories are declared according to [Firefox's built-in consent requirements](https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/).
+
+## Limitations
+
+Browser internal pages, extension stores, some protected pages, built-in PDF viewers, canvas-rendered text, and cross-origin frames cannot be treated as ordinary article pages. Use the text workspace for copied text. Layout testing covers the documented fixtures and public pages, not every site. An extension changes page height when adding translations; the layout promise is to preserve original content and reading structure, not to keep every element at its previous vertical position.
+
+Shortcuts may be reserved by the OS, browser, or another extension. Change them in the browser's extension shortcut manager. On macOS, Alt is Option; the workspace supports Cmd+Enter as well as Ctrl+Enter, but macOS interaction testing remains open.

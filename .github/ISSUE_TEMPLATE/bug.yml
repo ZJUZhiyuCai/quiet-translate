@@ -1,0 +1,32 @@
+name: Bug / 问题反馈
+description: A reproducible translation, layout, or browser problem
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: "Do not include API keys or private browsing content. 请勿粘贴密钥或私人网页内容。"
+  - type: input
+    id: version
+    attributes:
+      label: Extension version / 插件版本
+      placeholder: 1.1.0
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser version and OS / 浏览器版本与系统
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps and public example / 复现步骤与公开示例
+      description: Include a public URL or minimal HTML, expected behavior, and actual behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence / 截图或错误信息
+      description: Redact credentials and personal information. For latency, include text length and whether cache was enabled.

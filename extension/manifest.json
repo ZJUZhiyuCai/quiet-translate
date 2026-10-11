@@ -1,0 +1,79 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_name__",
+  "short_name": "Quiet Translate",
+  "version": "1.1.0",
+  "description": "__MSG_description__",
+  "minimum_chrome_version": "120",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "contextMenus"
+  ],
+  "optional_host_permissions": [
+    "https://*/*",
+    "http://localhost/*",
+    "http://127.0.0.1/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "__MSG_action__",
+    "default_icon": {
+      "16": "icons/16.png",
+      "32": "icons/32.png",
+      "48": "icons/48.png",
+      "128": "icons/128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/16.png",
+    "32": "icons/32.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*/*",
+        "http://*/*"
+      ],
+      "js": [
+        "shared/locale.js",
+        "content.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "commands": {
+    "toggle-page": {
+      "suggested_key": {
+        "default": "Alt+T"
+      },
+      "description": "__MSG_toggle_page__"
+    },
+    "translate-selection": {
+      "suggested_key": {
+        "default": "Alt+Q"
+      },
+      "description": "__MSG_translate_selection__"
+    },
+    "open-workspace": {
+      "suggested_key": {
+        "default": "Alt+L"
+      },
+      "description": "__MSG_open_workspace__"
+    }
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; base-uri 'none'"
+  },
+  "homepage_url": "https://github.com/ZJUZhiyuCai/quiet-translate",
+  "default_locale": "en"
+}

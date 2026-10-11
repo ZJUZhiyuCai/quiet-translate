@@ -1,0 +1,14 @@
+name: Feature / 功能建议
+description: Describe a reading problem worth solving
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to read or do? / 你想解决什么阅读问题？
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Proposed behavior / 期望的行为
+      description: A concrete example is more useful than a long feature list.

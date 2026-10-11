@@ -1,0 +1,15 @@
+node_modules/
+dist/
+local-install/
+output/
+.playwright/
+.playwright-cli/
+*.local.json
+*.log
+__pycache__/
+
+scripts/prepare_local.py
+.env
+.env.*
+*.pem
+*.key

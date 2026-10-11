@@ -1,0 +1,20 @@
+{
+  "name": {
+    "message": "Quiet Translate"
+  },
+  "description": {
+    "message": "Read bilingually, translate selections, and keep the original in sight. Bring your own OpenAI-compatible API."
+  },
+  "action": {
+    "message": "Quiet Translate · Bilingual reading"
+  },
+  "toggle_page": {
+    "message": "Translate page / Restore original"
+  },
+  "translate_selection": {
+    "message": "Translate selected text"
+  },
+  "open_workspace": {
+    "message": "Open text workspace"
+  }
+}
