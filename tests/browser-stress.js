@@ -9,8 +9,17 @@ async page => {
   const check = (value, label) => { if (!value) throw new Error(label); report.push({check: label, pass: true}); };
   const stats = () => article.evaluate(url => fetch(url + '/stats').then(r => r.json()), base);
   const toggle = () => worker.evaluate(id => chrome.tabs.sendMessage(id, {type: 'qt-toggle'}), tabId);
-  await article.bringToFront();
+  const activateArticle = async () => {
+    await worker.evaluate(async id => {
+      const tab = await chrome.tabs.update(id, {active: true});
+      await chrome.windows.update(tab.windowId, {focused: true});
+    }, tabId);
+    await article.bringToFront();
+    await article.waitForFunction(() => document.visibilityState === 'visible');
+  };
+  await activateArticle();
   await article.reload();
+  await activateArticle();
   await article.evaluate(() => scrollTo(0, 0));
   await article.evaluate(() => { window.__qaLongTasks=[]; new PerformanceObserver(list => window.__qaLongTasks.push(...list.getEntries().map(e=>e.duration))).observe({type:'longtask',buffered:true}); });
   if (!(await worker.evaluate(id=>chrome.tabs.sendMessage(id,{type:'qt-state'}),tabId)).enabled) await toggle();
@@ -80,7 +89,7 @@ async page => {
   // Save preferences through the same extension message boundary as the real UI.
   const saved = await workspace.evaluate(async host => chrome.runtime.sendMessage({type:'qt-save',settings:{autoSites:[host]}}),new URL(base).host);
   check(saved.ok, 'Site preferences persist');
-  await article.bringToFront(); await article.reload();
+  await activateArticle(); await article.reload(); await activateArticle();
   await article.evaluate(() => scrollTo(0, 0));
   await article.locator('#first qt-line .text[data-loading=false]').waitFor();
   check(true, 'Per-site auto translation starts on a fresh navigation');

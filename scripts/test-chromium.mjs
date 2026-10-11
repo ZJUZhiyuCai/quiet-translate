@@ -46,4 +46,10 @@ try {
     console.log(`${file}: ${checks.filter(c=>c.pass).length} checks passed`);
   }
   console.log('Browser reports: '+output);
+} catch (error) {
+  await writeFile(output+'/failure.log',String(error.stack || error));
+  const diagnostic=`async page => {const c=page.context();const pages=[];for(const p of c.pages()){pages.push({url:p.url(),state:await p.evaluate(()=>({visibility:document.visibilityState,lines:document.querySelectorAll('qt-line').length,text:document.querySelector('qt-overlay')?.shadowRoot.querySelector('.toast')?.textContent,errors:[...document.querySelectorAll('qt-line')].map(e=>e.shadowRoot.querySelector('.error')?.textContent).filter(Boolean)})).catch(e=>({error:e.message}))});}return {pages};}`;
+  await writeFile(output+'/diagnostic.js',diagnostic);
+  await writeFile(output+'/diagnostic.log',await command('run-code','--filename',output+'/diagnostic.js').catch(e=>String(e)));
+  throw error;
 } finally {await command('close').catch(()=>{});server.kill();}
