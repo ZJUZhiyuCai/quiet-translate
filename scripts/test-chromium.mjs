@@ -40,7 +40,7 @@ try {
   }
   const setup=(await readFile('tests/browser-setup.js','utf8')).replaceAll('http://127.0.0.1:63717',base);
   await writeFile(output+'/setup.js',setup);await command('run-code','--filename',output+'/setup.js');
-  for(const file of ['browser-stress.js','browser-compatibility.js','browser-frontend.js','browser-installation.js','browser-providers.js']){
+  for(const file of ['browser-stress.js','browser-compatibility.js','browser-frontend.js','browser-installation.js','browser-providers.js','browser-models.js']){
     const source=(await readFile('tests/'+file,'utf8')).replace('"__QT_OUTPUT__"',JSON.stringify(output));
     await writeFile(output+'/'+file,source);
     const result=await command('run-code','--filename',output+'/'+file);

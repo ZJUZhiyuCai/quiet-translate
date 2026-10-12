@@ -10,7 +10,7 @@
 
 [![CI](https://github.com/ZJUZhiyuCai/quiet-translate/actions/workflows/ci.yml/badge.svg)](https://github.com/ZJUZhiyuCai/quiet-translate/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-397965.svg)](LICENSE)
 
-[**让 Agent 安装**](INSTALL.md) · [下载 v1.3.1](https://github.com/ZJUZhiyuCai/quiet-translate/releases/latest) · [安装与浏览器支持](docs/BROWSERS.md) · [API 配置](docs/PROVIDERS.md) · [反馈问题](https://github.com/ZJUZhiyuCai/quiet-translate/issues/new/choose)
+[**让 Agent 安装**](INSTALL.md) · [下载 v1.4.0](https://github.com/ZJUZhiyuCai/quiet-translate/releases/latest) · [安装与浏览器支持](docs/BROWSERS.md) · [API 配置](docs/PROVIDERS.md) · [反馈问题](https://github.com/ZJUZhiyuCai/quiet-translate/issues/new/choose)
 
 ![保留原文的双语阅读](docs/assets/bilingual.png)
 
@@ -21,6 +21,8 @@
 - **长文工作台**：最多 60,000 字符，自动分段、顺序流式显示、随时取消，支持 TXT / Markdown 导入与双语文本导出。宽窗口左右对照，窄窗口上下排列。
 - **自带 API**：支持 OpenAI 兼容 Chat Completions 接口，提供多个服务地址预设。模型、密钥和 API 费用由使用者自行管理。
 - **自然融入**：无常驻悬浮球；细边线、柔和底色、纯文字三种样式，深浅色、术语表、网站规则和本地缓存。界面跟随浏览器显示中英文，提供 12 种目标语言。
+
+**1.4.0** 填好 API 密钥后自动获取模型，支持下拉搜索、键盘选择；接口不支持或获取失败时，仍可手填。缺少接口访问权限时会提供授权按钮。[模型获取说明 →](docs/PROVIDERS.md#model-discovery)
 
 **1.3.1** 新增国产服务预设：DeepSeek、智谱 GLM、通义千问（北京 / 新加坡）、Kimi、MiniMax、硅基流动、豆包。选择服务后带入接口、起始模型和兼容参数，保留手动修改；Mac 自动显示 ⌥ Option / ⌘ Cmd。
 
@@ -57,11 +59,11 @@ Chrome、Edge、Comet 使用 Chromium 包；Brave 可使用同一包，但尚未
 
 ### 连好 API，开始阅读
 
-选择服务商，确认自动填入的接口和模型，再填写自己的 **API 密钥**。豆包需填写账户中已开通的 Model ID 或接入点 ID；本机服务需填写已安装的模型名。点击**保存并测试连接**，按浏览器提示允许访问接口。测试成功后可直接打开长文工作台；刷新已打开的文章页即可使用划线翻译。
+选择服务商，确认接口并填写自己的 **API 密钥**。停止输入后自动获取模型；尚未授权接口时，点击**允许访问并获取模型**。点开模型字段右侧的箭头，输入名称搜索并选择；获取不了或列表里没有时，直接手填即可。豆包也可填写自己开通的 Model ID 或接入点 ID；本机服务点击**获取模型**读取已安装的模型。点击**保存并测试连接**，按浏览器提示允许访问接口。测试成功后可直接打开长文工作台；刷新已打开的文章页即可使用划线翻译。
 
-![v1.3.0 中文设置页：保存并测试连接，以及备份与迁移入口](docs/assets/setup.png)
+![v1.4.0 中文设置页：可搜索的模型下拉框，同时保留手填](docs/assets/setup.png)
 
-设置截图使用本机演示服务，不含个人密钥，也未展示真实模型的连接速度。预设填写地址、起始模型与兼容参数，模型可以修改；服务权限和 API 费用由使用者自行管理。[各厂商配置说明 →](docs/PROVIDERS.md)
+设置截图使用本机演示模型列表，不含个人密钥，也未展示真实模型的连接速度。预设填写地址、起始模型与兼容参数，模型可以修改；服务权限和 API 费用由使用者自行管理。[各厂商配置说明 →](docs/PROVIDERS.md)
 
 **更新旧版：** 让 Agent 沿用原来的加载目录更新，再重新加载同一张扩展卡片，可以保留 API 设置和偏好。安装器保留旧代码备份以便回退；更新由用户委托 Agent 执行，不会在后台自行更新。
 
@@ -86,7 +88,7 @@ Chrome、Edge、Comet 使用 Chromium 包；Brave 可使用同一包，但尚未
 
 **2026 年 10 月 12 日**的 GLM 5.3 Flash 实测覆盖 MDN、Wikipedia、Paul Graham：关闭缓存的 5 次划线，首字中位数 **1.344 秒**；7,167 字符的工作台样本 **11.073 秒**完成。这轮测量早于最后的字体调整，属于特定网络和模型下的小样本，不是严格对照实验或速度承诺。[逐项测量与限制 →](docs/FRONTEND-QA.md#live-api-sample)
 
-1.3.1 在 Chrome、Edge、Comet 中各通过 **110 项检查**（包含新增的 30 项预设与 Mac 文案检查），Firefox 通过 **10 项端到端检查**，覆盖排版、划线定位、首次配置、加密迁移和深浅色对比度。安装器还验证了重复安装、更新失败恢复、包校验和回退；单元测试与安装包可复现检查也已通过。[预设与 Mac 文案验证 →](docs/PROVIDER-PRESETS-QA.md) · [安装与迁移验证 →](docs/AGENT-INSTALL-QA.md) · [界面验证 →](docs/FRONTEND-QA.md) · [此前的压力与协议验证 →](docs/QA.md)
+1.4.0 在 Chrome、Edge、Comet 中各通过 **143 项检查**（包含新增的 33 项模型获取检查），Firefox 通过 **14 项端到端检查**，覆盖排版、划线定位、首次配置、加密迁移和深浅色对比度。安装器还验证了重复安装、更新失败恢复、包校验和回退；单元测试与安装包可复现检查也已通过。[模型获取验证 →](docs/MODEL-DISCOVERY-QA.md) · [预设与 Mac 文案验证 →](docs/PROVIDER-PRESETS-QA.md) · [安装与迁移验证 →](docs/AGENT-INSTALL-QA.md) · [界面验证 →](docs/FRONTEND-QA.md) · [此前的压力与协议验证 →](docs/QA.md)
 
 ## 数据与隐私
 

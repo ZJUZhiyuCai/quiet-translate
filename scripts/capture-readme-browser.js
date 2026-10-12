@@ -50,7 +50,10 @@ async page => {
   await options.setViewportSize({width: 1360, height: 960});
   await options.waitForFunction(() => document.querySelector('[name=model]').value === 'demo-replay');
   // Show the actual setup controls, without advertising replay latency as an API benchmark.
+  await options.locator('#fetch-models').click();
+  await options.waitForFunction(() => document.querySelector('#models-status').dataset.state === 'ok');
   await options.evaluate(() => scrollTo(0, 0));
+  await options.locator('#model-toggle').click();
   await options.screenshot({path: capture.output + (capture.locale === 'zh-CN' ? '/setup.png' : '/setup-en.png')});
   const version = await worker.evaluate(() => chrome.runtime.getManifest().version);
   return {version, locale: capture.locale, browser: context.browser().version(), replay: true, selected: await article.locator('qt-overlay .meta').innerText(), workspaceStatus: await workspace.locator('#status').innerText(), sourcePreserved: await workspace.locator('#source').inputValue() === capture.source};

@@ -4,9 +4,16 @@ import {endpointURL} from './shared/core.js';
 import {api as chrome} from './shared/platform.js';
 import {makeProfile, encryptProfile, readProfile, MAX_PROFILE_BYTES} from './shared/profile.js';
 import {PROVIDERS, providerForEndpoint} from './shared/providers.js';
+import {createModelDiscovery} from './shared/model-discovery.js';
 const form = $('#preferences-form');
 let settings, test, saving = false, transferring = false, dirty = false, revision = 0, imported = false;
 const field = name => form.elements.namedItem(name);
+const discovery = createModelDiscovery({form, getSaved: () => settings, isImported: () => imported, isBusy: () => saving || transferring,
+  onSelect(model) {
+    const provider = providerForEndpoint(field('endpoint').value);
+    if (provider && model !== provider.model && field('reasoningEffort').value === provider.reasoningEffort) field('reasoningEffort').value = 'default';
+  },
+});
 for (const group of [...new Set(PROVIDERS.map(provider => provider.group))]) {
   const options = document.createElement('optgroup'); options.label = t(group);
   for (const provider of PROVIDERS.filter(provider => provider.group === group)) {
@@ -31,6 +38,7 @@ function preview() {
   theme(field('theme').value);
 }
 function populate() {
+  discovery.invalidate();
   for (const name of ['selection', 'hover', 'cache']) field(name).checked = settings[name];
   for (const name of ['target', 'selectionMode', 'style', 'fontSize', 'theme', 'endpoint', 'model', 'glossary', 'reasoningEffort', 'tokenParameter', 'authMode']) field(name).value = settings[name];
   for (const name of ['autoSites', 'excludedSites']) field(name).value = settings[name].join('\n');
@@ -45,6 +53,7 @@ function credentialHint() {
   $('#key-hint').textContent = settings.authMode === 'none' ? t("本机服务无需密钥。") : hasKey ? t("密钥已保存，仅存于此浏览器。") : t("仅保存在此浏览器，不参与同步。");
 }
 function actions() {
+  discovery.actions();
   $('#save').disabled = saving || transferring;
   $('#save-test').disabled = saving || transferring || Boolean(test);
   $('#test-connection').disabled = saving || transferring || Boolean(test) || !settings?.configured;
@@ -78,7 +87,7 @@ form.addEventListener('submit', async event => {
   const submittedRevision = revision;
   const testAfterSave = event.submitter?.id === 'save-test';
   let saved = false;
-  saving = true; cancelTest(); actions();
+  saving = true; cancelTest(); discovery.invalidate(); actions();
   connectionState('idle', '');
   try {
     const endpoint = endpointURL(field('endpoint').value);
@@ -109,6 +118,7 @@ form.addEventListener('submit', async event => {
   }
 });
 $('#provider').onchange = event => {
+  discovery.invalidate();
   const preset = PROVIDERS.find(provider => provider.id === event.target.value);
   providerHint(preset);
   if (!preset) return;
@@ -120,11 +130,11 @@ $('#provider').onchange = event => {
   $('#key-hint').textContent = preset.authMode === 'none' ? t('本机服务无需密钥。') : keepKey ? t('密钥已保存，仅存于此浏览器。') : t('请填写此服务的 API 密钥，保存后生效。');
   form.dispatchEvent(new Event('input'));
   connectionState('idle', t('预设已填入，保存并测试后生效。')); actions();
-  field(preset.model ? 'apiKey' : 'model').focus();
+  field(preset.authMode === 'none' ? 'model' : 'apiKey').focus();
 };
 $('#remove-key').onclick = async () => {
   if (saving) return;
-  saving = true; cancelTest(); actions();
+  saving = true; cancelTest(); discovery.invalidate(); actions();
   try {
     ({settings} = await send('qt-save', {settings: {removeKey: true, authMode: 'bearer'}}));
     field('apiKey').value = ''; credentialHint();

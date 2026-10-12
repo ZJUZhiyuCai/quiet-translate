@@ -1,9 +1,30 @@
 import http from 'node:http';
 import {readFile} from 'node:fs/promises';
 const article = await readFile(new URL('../tests/fixtures/article.html', import.meta.url));
-const stats = {requests: 0, active: 0, maxActive: 0, aborted: 0};
+const stats = {requests: 0, active: 0, maxActive: 0, aborted: 0, modelRequests: 0, modelAborted: 0};
 const server = http.createServer(async (req, res) => {
   if (req.url === '/stats') { res.setHeader('Content-Type', 'application/json'); return res.end(JSON.stringify(stats)); }
+  if (req.method === 'GET' && req.url.endsWith('/models')) {
+    stats.modelRequests++;
+    let ended = false;
+    res.on('close', () => { if (!ended) stats.modelAborted++; });
+    const key = req.headers.authorization || '';
+    if (key.includes('dummy-slow')) await new Promise(resolve => setTimeout(resolve, 1800));
+    if (res.destroyed) return;
+    ended = true;
+    res.setHeader('Content-Type', 'application/json');
+    if (req.url.startsWith('/unsupported/') || key.includes('dummy-unsupported')) { res.writeHead(404); return res.end('{}'); }
+    if (key.includes('dummy-invalid')) { res.writeHead(401); return res.end('{"error":"do not echo credentials"}'); }
+    if (key.includes('dummy-malformed')) return res.end('<html>not a model list</html>');
+    if (key.includes('dummy-empty')) return res.end('{"data":[]}');
+    const data = key.includes('dummy-new') ? [{id: 'new-account-model'}] : [
+      {id: 'mock-model'}, {id: 'fast-model', name: 'Fast translation'}, {id: 'mock-model'},
+      {id: 'literal-name', name: '<img src=x onerror=alert(1)>'},
+      {id: 'image-only', output_modalities: ['image']}, {id: 'bad id'},
+      {id: 'vendor/a-model-with-a-long-identifier-for-responsive-layout-testing'},
+    ];
+    return res.end(JSON.stringify({data}));
+  }
   if (req.url === '/v1/chat/completions' && req.method === 'POST') {
     let body = ''; for await (const part of req) body += part;
     let data; try { data = JSON.parse(body); } catch { res.writeHead(400); return res.end('{}'); }

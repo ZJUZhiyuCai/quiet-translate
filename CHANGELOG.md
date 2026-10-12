@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.0 — 2026-10-13
+
+- Enter an API key to fetch model IDs automatically after a short pause, with an explicit permission button when needed. The editable dropdown supports search, arrow keys, Enter and Escape; manual entry remains available for unsupported, empty, denied or failed lists.
+- Discover OpenAI-compatible catalogs and paginated Model Studio catalogs on the selected host. Existing model choices and saved credentials are preserved until Save; changing credentials or destinations cancels stale requests. Model lists stay in the current tab.
+- Isolate listing in the extension background, reject website callers and redirects, omit cookies, bound response sizes/counts/time, and never expose provider error bodies. Update configuration screenshots and document discovery behavior and its access limitations.
+
 ## 1.3.1 — 2026-10-12
 
 - Domestic provider presets for DeepSeek, Zhipu GLM, Qwen (Beijing / Singapore), Kimi, MiniMax, SiliconFlow, and Doubao, with editable model defaults, regional guidance, and official documentation links. Existing saved configurations remain untouched until saved.
