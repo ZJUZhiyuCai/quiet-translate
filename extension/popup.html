@@ -3,11 +3,18 @@
 <body class="popup">
   <header class="popup-header"><div class="brand"><span class="logo"><img src="icons/48.png" alt=""></span><span class="wordmark">轻译<small>QUIET TRANSLATE</small></span></div><span class="spacer"></span><button id="settings" class="icon-button" title="设置" aria-label="打开设置"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3" fill="var(--surface)"/><circle cx="16" cy="17" r="3" fill="var(--surface)"/></svg></button></header>
   <main>
-    <div class="intro"><p class="eyebrow">A LITTLE CLOSER TO THE WORLD</p><h1>读懂，也读得自在。</h1><p>原文留在眼前，译文恰好在下面。</p></div>
-    <div class="read-card"><div class="row page-label"><span id="site">当前网页</span><span class="spacer"></span><span id="page-badge" class="tag">双语阅读</span></div><button id="toggle" class="primary translate-button" disabled><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 5h12M9 3v2m4 0c-1 6-4 10-10 13m2-10c2 4 5 7 9 9m0 4 4-11 4 11m-6.5-4h5"/></svg><span id="toggle-label">正在连接…</span><span class="spacer"></span><kbd>Alt T</kbd></button><div class="reading-status"><span id="progress">只翻译读到的内容，轻快不打扰</span><button id="retry" hidden>重试失败段落</button></div></div>
-    <div class="preferences"><label class="language-row" for="target"><span>翻译为</span><select id="target" aria-label="目标语言"></select></label><label class="switch-row"><span>划线翻译</span><input id="selection" type="checkbox" role="switch" aria-label="划线翻译"></label><label class="switch-row"><span>在此网站自动翻译</span><input id="auto-site" type="checkbox" role="switch" aria-label="在此网站自动翻译" disabled></label></div>
-    <button id="workspace" class="workspace-link"><span class="workspace-icon">↗</span><span><strong>长文翻译</strong><small>放下一整段，慢慢读明白</small></span><span class="spacer"></span><kbd>Alt L</kbd></button>
-    <div id="setup" class="setup" hidden>连接翻译服务后即可使用。<button id="setup-link">前往设置 →</button></div>
+    <div id="setup" class="setup" hidden><span>连接翻译服务后即可使用。</span><button id="setup-link">前往设置 →</button></div>
+    <div class="read-card">
+      <div class="row page-label"><span id="site">当前网页</span><span class="spacer"></span><span id="page-badge" class="tag">双语阅读</span></div>
+      <button id="toggle" class="primary translate-button" disabled><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M3 5h12M9 3v2m4 0c-1 6-4 10-10 13m2-10c2 4 5 7 9 9m0 4 4-11 4 11m-6.5-4h5"/></svg><span id="toggle-label">正在连接…</span><span class="spacer"></span><kbd>Alt T</kbd></button>
+      <div class="reading-status"><span id="progress">只翻译读到的内容，轻快不打扰</span><button id="retry" hidden>重试失败段落</button></div>
+    </div>
+    <div class="preferences">
+      <label class="language-row" for="target"><span>翻译为</span><select id="target" aria-label="目标语言"></select></label>
+      <label class="switch-row"><span>划线翻译</span><input id="selection" type="checkbox" role="switch" aria-label="划线翻译"></label>
+      <label class="switch-row"><span>在此网站自动翻译</span><input id="auto-site" type="checkbox" role="switch" aria-label="在此网站自动翻译" disabled></label>
+    </div>
+    <button id="workspace" class="workspace-link"><span class="workspace-icon" aria-hidden="true">↗</span><span class="workspace-text"><strong>长文翻译</strong><small>放下一整段，慢慢读明白</small></span><kbd>Alt L</kbd></button>
   </main>
   <footer class="popup-footer"><span id="model"><span class="status-dot off"></span>尚未连接</span><button id="exclude" hidden>本站停用</button><span id="version"></span></footer>
   <div id="notice" class="notice" role="status" hidden></div><script type="module" src="popup.js"></script>

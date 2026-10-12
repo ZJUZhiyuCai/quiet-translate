@@ -16,7 +16,7 @@ Load `extension/` unpacked in a Chromium browser. `npm run package` also builds 
 
 For the automated Firefox integration, install Firefox and run `npm run test:firefox`. Selenium Manager resolves the driver; `QT_FIREFOX_BINARY` and `QT_GECKODRIVER` optionally select executables. This test uses a temporary browser profile, dummy key, local fixture, and mock SSE endpoint. It enables geckodriver system access only for that disposable test process so extension pages can be tested. It does not access your normal browser profile or API account.
 
-For Chromium, `npm run test:chromium` drives a fresh profile through Playwright CLI. Set `QT_CHROMIUM_BINARY` to a browser executable to test a particular browser. All artifacts go into ignored `output/playwright/`. Browser behavior and reproducible cases are documented in [QA](docs/QA.md).
+For Chromium, `npm run test:chromium` drives a fresh profile through Playwright CLI. Set `QT_CHROMIUM_BINARY` to a browser executable to test a particular browser, and `QT_BROWSER_LOCALE` to `zh-CN` or `en-US` to exercise either interface language (English is the default). The suite includes reading/stress tests, real-page structural fixtures, and frontend state/layout regressions. Each run gets a unique output directory so parallel browser runs do not share a profile. All artifacts go into ignored `output/playwright/`. Browser behavior and reproducible cases are documented in [QA](docs/QA.md).
 
 ## What belongs in a PR
 

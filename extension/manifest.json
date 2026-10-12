@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_name__",
   "short_name": "Quiet Translate",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "__MSG_description__",
   "minimum_chrome_version": "120",
   "permissions": [

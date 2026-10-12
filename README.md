@@ -10,7 +10,7 @@ English · [简体中文](README.zh-CN.md)
 
 [![CI](https://github.com/ZJUZhiyuCai/quiet-translate/actions/workflows/ci.yml/badge.svg)](https://github.com/ZJUZhiyuCai/quiet-translate/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-397965.svg)](LICENSE)
 
-[**Download v1.1.1**](https://github.com/ZJUZhiyuCai/quiet-translate/releases/latest) · [Installation](docs/BROWSERS.md) · [Connect your API](docs/PROVIDERS.md) · [Report a bug](https://github.com/ZJUZhiyuCai/quiet-translate/issues/new/choose)
+[**Download v1.2.0**](https://github.com/ZJUZhiyuCai/quiet-translate/releases/latest) · [Installation](docs/BROWSERS.md) · [Connect your API](docs/PROVIDERS.md) · [Report a bug](https://github.com/ZJUZhiyuCai/quiet-translate/issues/new/choose)
 
 ![Bilingual reading on an original demo article](docs/assets/bilingual.png)
 
@@ -55,7 +55,7 @@ Four requests maximum, with capacity reserved for selections. Identical requests
 
 In the recorded 1.0.1 live-provider sample on MDN, Wikipedia, and Paul Graham, seven short selections had **0.980 s median time to first visible text**, cache disabled. One 7,167-character passage finished in **9.709 s**. These are small, provider/network-specific samples, not a speed guarantee. [Method, individual measurements, and limits →](docs/REAL-WEB-QA.md)
 
-The 1.1.0 release was exercised in Chrome, Edge, Comet, and Firefox, with additional deterministic SSE, cancellation, XSS-as-text, 60,000-character, and 1,000-paragraph tests. [QA report →](docs/QA.md)
+Version 1.2.0 adds refined reading typography, responsive workspace controls, and stable selection cards. Chrome, Edge, and Comet each passed 64 checks; Firefox passed 9 end-to-end checks. [Frontend validation and screenshots →](docs/FRONTEND-QA.md) · [Earlier stress and protocol checks →](docs/QA.md)
 
 ## Privacy
 

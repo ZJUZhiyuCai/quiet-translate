@@ -8,7 +8,7 @@
 
 [English](README.md) · 简体中文
 
-[**下载 v1.1.1**](https://github.com/ZJUZhiyuCai/quiet-translate/releases/latest) · [安装与浏览器支持](docs/BROWSERS.md) · [API 配置](docs/PROVIDERS.md) · [反馈问题](https://github.com/ZJUZhiyuCai/quiet-translate/issues/new/choose)
+[**下载 v1.2.0**](https://github.com/ZJUZhiyuCai/quiet-translate/releases/latest) · [安装与浏览器支持](docs/BROWSERS.md) · [API 配置](docs/PROVIDERS.md) · [反馈问题](https://github.com/ZJUZhiyuCai/quiet-translate/issues/new/choose)
 
 ![保留原文的双语阅读](docs/assets/bilingual.png)
 
@@ -49,7 +49,7 @@
 
 1.0.1 的真实服务样本覆盖 MDN、Wikipedia、Paul Graham：关闭缓存的 7 次短段划线，首字中位数 **0.980 秒**；7,167 字符长段 **9.709 秒**完成。这些是特定网络与模型的小样本，不能代表所有服务或所有页面。[完整实测 →](docs/REAL-WEB-QA.md)
 
-1.1.0 又完成了 Chrome、Edge、Comet、Firefox 回归，以及长文、取消、错误响应、页面结构和千段压力测试。[验证记录 →](docs/QA.md)
+1.2.0 改进了阅读字体、窄屏工作台和划线浮层。Chrome、Edge、Comet 各通过 64 项检查，Firefox 通过 9 项端到端检查。[新版验证与截图 →](docs/FRONTEND-QA.md) · [此前的压力与协议验证 →](docs/QA.md)
 
 ## 数据与隐私
 
