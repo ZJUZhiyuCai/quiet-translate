@@ -110,7 +110,21 @@ async page => {
     }
   }
   await options.setViewportSize({width: 1360, height: 1000});
-  await model.fill('fast'); await model.press('ArrowDown'); await model.press('Enter');
+  await options.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  await model.fill('fast'); await model.press('ArrowDown');
+  // Resize delivery is asynchronous on Linux. It must not discard a keyboard
+  // choice between ArrowDown and Enter, or Enter can submit the partial query.
+  const highlighted = await model.getAttribute('aria-activedescendant');
+  await options.evaluate(() => {
+    window.__modelResizeObserved = false;
+    window.addEventListener('resize', () => { window.__modelResizeObserved = true; }, {once: true});
+  });
+  await options.setViewportSize({width: 1360, height: 900});
+  await options.waitForFunction(() => window.__modelResizeObserved);
+  check(Boolean(highlighted) && await model.getAttribute('aria-expanded') === 'true' && await model.getAttribute('aria-activedescendant') === highlighted,
+    'Resizing preserves the filtered list and highlighted keyboard choice');
+  await model.press('Enter');
+  if (await model.inputValue() !== 'fast-model') throw new Error('Expected fast-model before saving; got ' + await model.inputValue());
   await options.locator('#save-test').click(); await options.locator('#setup-success').waitFor({state: 'visible'});
   check((await send('qt-settings')).settings.model === 'fast-model', 'A discovered model saves and translates successfully through the existing setup flow');
   await options.reload(); await options.waitForFunction(() => document.querySelector('[name=model]').value === 'fast-model');

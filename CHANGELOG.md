@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.1 — 2026-10-13
+
+- Preserve the filtered model list and highlighted choice when the window resizes, so a delayed resize event between Arrow and Enter cannot submit a partial model ID. Reposition the dropdown above the save bar without resetting keyboard navigation.
+- Add a real-window resize regression and exercise Firefox's public page-control path, including content-script initialization on newly opened pages.
+
 ## 1.4.0 — 2026-10-13
 
 - Enter an API key to fetch model IDs automatically after a short pause, with an explicit permission button when needed. The editable dropdown supports search, arrow keys, Enter and Escape; manual entry remains available for unsupported, empty, denied or failed lists.
