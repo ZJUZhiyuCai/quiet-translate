@@ -1,5 +1,6 @@
 import {t} from './i18n.js';
 import {translationPrompt, httpError, throwIfAborted} from './core.js';
+import {providerParameters} from './providers.js';
 
 export async function readSSE(body, onEvent, signal) {
   const reader = body.getReader();
@@ -42,7 +43,7 @@ export async function streamTranslation(text, settings, {signal, onText, fetcher
     messages: [{role: 'system', content: translationPrompt(settings.target, settings.glossary)}, {role: 'user', content: text}],
   };
   // Many compatible providers reject unsupported sampling/reasoning parameters.
-  if (settings.reasoningEffort && settings.reasoningEffort !== 'default') payload.reasoning_effort = settings.reasoningEffort;
+  Object.assign(payload, providerParameters(settings));
   const headers = {'Content-Type': 'application/json'};
   if (settings.authMode !== 'none') headers.Authorization = 'Bearer ' + settings.apiKey;
   let response;

@@ -2,6 +2,34 @@
 (() => {
   if (globalThis.QuietTranslateLocale) return;
   const en = {
+  "选择翻译服务": "Translation provider",
+  "确认模型，填写密钥": "Check model & add key",
+  "国产服务": "Chinese providers",
+  "其他服务": "Other providers",
+  "本机服务": "Local services",
+  "智谱 GLM": "Zhipu GLM",
+  "通义千问 · 北京": "Qwen · Beijing",
+  "通义千问 · 新加坡": "Qwen · Singapore",
+  "Kimi · 月之暗面": "Kimi · Moonshot",
+  "硅基流动 · SiliconFlow": "SiliconFlow",
+  "豆包 · 火山方舟": "Doubao · Volcengine",
+  "使用自己的 API。可选预设快速填写，也可手动输入兼容接口。": "Use your own API. Choose a preset or enter a compatible endpoint.",
+  "官方文档 ↗": "Official docs ↗",
+  "已填入翻译起始模型，可按账户权限修改。": "A starting model is filled in. Change it to match your account access.",
+  "GLM 5.3 Flash 保留必要思考，预设为较低推理强度。": "GLM 5.3 Flash requires thinking; the preset uses low reasoning effort.",
+  "请使用北京地域的百炼 API 密钥；也可替换为业务空间专属地址。": "Use a Beijing-region Model Studio key. You can also enter your workspace endpoint.",
+  "请使用新加坡地域的百炼 API 密钥；北京密钥不能混用。": "Use a Singapore-region Model Studio key, not a Beijing-region key.",
+  "Kimi K2.6 预设关闭深度思考，适合直接翻译。": "Kimi K2.6 starts with thinking off for direct translation.",
+  "MiniMax M3 预设直接回答；思考内容与译文分开。": "MiniMax M3 starts with thinking off and keeps reasoning separate from translation.",
+  "模型名包含厂商前缀，请保留完整名称。": "Keep the full model ID, including the provider prefix.",
+  "填写已开通的 Model ID，或你自己的 ep- 接入点 ID。": "Enter an enabled Model ID or your own ep- endpoint ID.",
+  "Model ID 或 ep- 接入点 ID": "Model ID or ep- endpoint ID",
+  "填写账户中可用的 Chat Completions 模型。": "Enter a Chat Completions model available to your account.",
+  "填写完整模型 ID，例如厂商名/模型名。": "Enter the full model ID, including its provider/model prefix.",
+  "填写本机已安装的模型名；请先启动 Ollama，无需 API 密钥。": "Enter an installed model and start Ollama first. No API key is needed.",
+  "请填写此服务的 API 密钥，保存后生效。": "Enter this provider’s API key, then save to apply.",
+  "预设已填入，保存并测试后生效。": "Preset filled in. Save & test to apply it.",
+  "关闭思考 · 需模型支持": "Thinking off · supported models only",
   "网页双语": "Bilingual page",
   "扩展已更新，请刷新网页。": "The extension was updated. Refresh this page.",
   "轻译已更新，请刷新网页后继续。": "Quiet Translate was updated. Refresh to continue.",
@@ -127,7 +155,7 @@
   "偏好设置": "Preferences",
   "偏好设置 · 轻译": "Preferences · Quiet Translate",
   "长文翻译 · 轻译": "Workspace · Quiet Translate",
-  "刚刚好的": "Make reading",
+  "刚刚好的": "Make reading ",
   "阅读习惯。": "your own.",
   "少一点打扰，": "A little less friction.",
   "多一点理解。": "A little more understanding.",
@@ -290,24 +318,26 @@
 };
   const api = globalThis.browser ?? globalThis.chrome;
   const isEnglish = !/^(zh)(-|_|$)/i.test(api?.i18n?.getUILanguage?.() || 'zh');
-  const t = (key, ...values) => (isEnglish ? en[key] || key : key).replace(/\{(\d+)\}/g, (_, i) => values[i] ?? '{' + i + '}');
+  const isMac = /^mac/i.test(globalThis.navigator?.userAgentData?.platform || globalThis.navigator?.platform || '');
+  const shortcuts = text => isMac ? text.replace(/\bAlt\b/g, '⌥ Option').replace(/\bCtrl\b/g, '⌘ Cmd') : text;
+  const t = (key, ...values) => shortcuts(isEnglish ? en[key] || key : key).replace(/\{(\d+)\}/g, (_, i) => values[i] ?? '{' + i + '}');
   function localize(root) {
-    if (!isEnglish) return;
+    if (!isEnglish && !isMac) return;
     const doc = root.ownerDocument || root;
     const walker = doc.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     let node;
     while ((node = walker.nextNode())) {
       if (node.parentElement?.closest('script,style,textarea,[data-no-localize]')) continue;
       const key = node.textContent.trim();
-      if (en[key]) node.textContent = node.textContent.replace(key, en[key]);
+      if (Object.hasOwn(en, key) || node.parentElement?.matches('kbd')) node.textContent = node.textContent.replace(key, t(key));
     }
     for (const element of root.querySelectorAll('[title],[aria-label],[placeholder]')) {
       for (const attribute of ['title','aria-label','placeholder']) {
         const value = element.getAttribute(attribute);
-        if (en[value]) element.setAttribute(attribute, en[value]);
+        if (Object.hasOwn(en, value)) element.setAttribute(attribute, t(value));
       }
     }
-    if (root === doc) doc.documentElement.lang = 'en';
+    if (root === doc && isEnglish) doc.documentElement.lang = 'en';
   }
-  globalThis.QuietTranslateLocale = Object.freeze({t, localize, isEnglish});
+  globalThis.QuietTranslateLocale = Object.freeze({t, localize, isEnglish, isMac});
 })();

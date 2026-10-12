@@ -3,9 +3,27 @@ import {$, send, theme, languageOptions, notify, createTranslation} from './shar
 import {endpointURL} from './shared/core.js';
 import {api as chrome} from './shared/platform.js';
 import {makeProfile, encryptProfile, readProfile, MAX_PROFILE_BYTES} from './shared/profile.js';
+import {PROVIDERS, providerForEndpoint} from './shared/providers.js';
 const form = $('#preferences-form');
 let settings, test, saving = false, transferring = false, dirty = false, revision = 0, imported = false;
 const field = name => form.elements.namedItem(name);
+for (const group of [...new Set(PROVIDERS.map(provider => provider.group))]) {
+  const options = document.createElement('optgroup'); options.label = t(group);
+  for (const provider of PROVIDERS.filter(provider => provider.group === group)) {
+    const option = document.createElement('option'); option.value = provider.id; option.textContent = t(provider.name); options.append(option);
+  }
+  $('#provider').append(options);
+}
+function providerHint(provider) {
+  $('#provider-hint').textContent = provider ? t(provider.hint) : t('使用自己的 API。可选预设快速填写，也可手动输入兼容接口。');
+  const link = $('#provider-docs'); link.hidden = !provider;
+  if (provider) link.href = provider.docs; else link.removeAttribute('href');
+  field('model').placeholder = t(provider?.modelPlaceholder || '填写服务商提供的模型 ID');
+}
+function identifyProvider() {
+  const provider = providerForEndpoint(field('endpoint').value);
+  $('#provider').value = provider?.id || 'custom'; providerHint(provider);
+}
 function preview() {
   $('#translation-preview').dataset.style = field('style').value;
   $('#translation-preview').style.fontSize = 14 * Number(field('fontSize').value) / 100 + 'px';
@@ -17,6 +35,7 @@ function populate() {
   for (const name of ['target', 'selectionMode', 'style', 'fontSize', 'theme', 'endpoint', 'model', 'glossary', 'reasoningEffort', 'tokenParameter', 'authMode']) field(name).value = settings[name];
   for (const name of ['autoSites', 'excludedSites']) field(name).value = settings[name].join('\n');
   field('apiKey').value = ''; credentialHint();
+  identifyProvider();
   preview();
   actions();
 }
@@ -50,6 +69,7 @@ function hostLines(name) {
 }
 form.addEventListener('input', event => {
   if (event.target.closest?.('#transfer')) return;
+  if (event.target === field('endpoint')) identifyProvider();
   dirty = true; revision++; saveState('dirty', t("有未保存的修改")); $('#setup-success').hidden = true; preview();
 });
 form.addEventListener('submit', async event => {
@@ -89,19 +109,18 @@ form.addEventListener('submit', async event => {
   }
 });
 $('#provider').onchange = event => {
-  const presets = {
-    openai: ['https://api.openai.com/v1', 'max_completion_tokens', 'bearer'],
-    deepseek: ['https://api.deepseek.com/v1', 'max_tokens', 'bearer'],
-    openrouter: ['https://openrouter.ai/api/v1', 'max_tokens', 'bearer'],
-    siliconflow: ['https://api.siliconflow.cn/v1', 'max_tokens', 'bearer'],
-    local: ['http://localhost:11434/v1', 'max_tokens', 'none'],
-  };
-  const preset = presets[event.target.value];
+  const preset = PROVIDERS.find(provider => provider.id === event.target.value);
+  providerHint(preset);
   if (!preset) return;
-  [field('endpoint').value, field('tokenParameter').value, field('authMode').value] = preset;
-  field('model').value = ''; field('apiKey').value = ''; field('reasoningEffort').value = 'default';
-  $('#key-hint').textContent = t("请填写此服务的模型名和密钥，然后保存。");
-  form.dispatchEvent(new Event('input')); field('model').focus();
+  cancelTest();
+  for (const name of ['endpoint', 'model', 'tokenParameter', 'authMode', 'reasoningEffort']) field(name).value = preset[name];
+  field('apiKey').value = '';
+  const keepKey = !imported && settings.configured && preset.authMode !== 'none' && new URL(settings.endpoint).origin === new URL(preset.endpoint).origin;
+  field('apiKey').placeholder = keepKey ? t('已保存 · 留空保持不变') : t('输入 API 密钥');
+  $('#key-hint').textContent = preset.authMode === 'none' ? t('本机服务无需密钥。') : keepKey ? t('密钥已保存，仅存于此浏览器。') : t('请填写此服务的 API 密钥，保存后生效。');
+  form.dispatchEvent(new Event('input'));
+  connectionState('idle', t('预设已填入，保存并测试后生效。')); actions();
+  field(preset.model ? 'apiKey' : 'model').focus();
 };
 $('#remove-key').onclick = async () => {
   if (saving) return;
@@ -167,7 +186,7 @@ $('#import-profile').onclick = async () => {
     settings = profile.settings; populate(); settings = persisted;
     field('apiKey').value = profile.settings.apiKey;
     field('apiKey').placeholder = t('输入 API 密钥');
-    $('#provider').value = 'custom';
+    identifyProvider();
     $('#key-hint').textContent = profile.hasKey ? t('密钥已从加密备份读入，保存后生效。') : t('此配置不含密钥，请填写自己的 API 密钥。');
     imported = true;
     form.dispatchEvent(new Event('input'));

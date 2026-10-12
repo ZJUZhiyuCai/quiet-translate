@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.1 — 2026-10-12
+
+- Domestic provider presets for DeepSeek, Zhipu GLM, Qwen (Beijing / Singapore), Kimi, MiniMax, SiliconFlow, and Doubao, with editable model defaults, regional guidance, and official documentation links. Existing saved configurations remain untouched until saved.
+- Provider-specific thinking controls for direct translation, low-effort GLM/Qwen defaults, and separated MiniMax reasoning output. No shared API keys or bundled credits.
+- macOS UI uses Option and Command in preferences, popup, selection hints, and workspace; Windows/Linux labels stay unchanged.
+
 ## 1.3.0 — 2026-10-12
 
 - Agent-first installation guide and a dependency-free Python installer distributed with release checksums. Downloads the official package, verifies it before replacement, keeps a fixed directory and rollback backup, and reports file preparation separately from browser verification. No store account, browser policy edits, or credential scanning.
