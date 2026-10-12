@@ -2,13 +2,14 @@
 
 This is a working first public release. A useful reading tool earns trust through compatibility, transparent behavior, and careful maintenance; a release does not make it a mature ecosystem overnight.
 
-## Next: make installation ordinary
+## Now: agent-first distribution
 
-- Submit the tested Chromium package to Chrome Web Store and Edge Add-ons using the maintainer's publisher accounts.
-- Sign and publish the Firefox package through AMO so it survives restart. Keep the developer ZIP available with honest labels.
+- Distribute stable, checksum-verified releases through the [agent installation workflow](../INSTALL.md). No browser-store submissions are planned for the current distribution strategy.
+- Keep one-action onboarding, same-folder updates, code rollback, and explicit encrypted migration reliable. Add regressions from real installation failures.
+- Keep the unsigned Firefox package clearly marked as temporary until restart; agent automation does not replace Mozilla signing.
 - Record macOS and Brave runs using the same fixtures; fix platform shortcut/permission issues before upgrading support claims.
 
-Completion means real store links, reproducible submitted builds, and successful first-install/update checks. Publisher registration, store review, signing credentials, and any fees are separate steps; they are not part of the current GitHub release.
+Completion means an agent can distinguish prepared files, an enabled browser installation, and a verified API connection, and can update without losing the user's configuration. Browser-enforced confirmations remain visible and honest.
 
 ## Then: improve reading quality from real reports
 

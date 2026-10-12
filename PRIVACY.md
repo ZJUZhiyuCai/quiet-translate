@@ -16,6 +16,10 @@ Page translation starts after you enable it, or on exact hostnames you add to th
 
 ## Your controls
 
+Preferences can be exported to a local JSON file on explicit request. The default export excludes the API key; it can still contain private glossary entries, provider addresses, and website rules. Optionally include the key in a password-encrypted backup (AES-256-GCM with a random salt/IV and PBKDF2-SHA256, 310,000 iterations). Encryption and decryption run locally. The passphrase is not saved or recoverable. Imported files fill a draft and take effect only after saving; plaintext imports containing keys are rejected. Backups omit caches, workspace drafts, browser permissions, and shortcuts. No file is uploaded to a migration service.
+
+The optional agent installer downloads releases and checksums from GitHub. GitHub receives normal download metadata such as the requesting IP address. The installer does not read browser profiles, API keys, or other apps' settings. During same-folder updates it retains an existing private `bootstrap.json` from older local installations and keeps a local code backup that may also contain that file. Do not upload private installation folders or backups to GitHub.
+
 Change providers, remove the saved key, disable caching, clear cached translations, disable individual sites, or uninstall the extension. Changing the API domain requires entering the new provider's credential; the previous key is not silently reused. Only HTTPS API endpoints and HTTP loopback endpoints are accepted. Redirects are refused and cookies are omitted from API requests.
 
 Browser permissions let the extension inject translation UI into ordinary web pages, use the current tab, offer context-menu commands, and store preferences locally. API host access is requested when you save the chosen endpoint. Broad content-script matches enable selection translation across sites; they do not mean that every page is sent to an API.

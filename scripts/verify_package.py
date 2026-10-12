@@ -27,3 +27,8 @@ for browser in ['chromium', 'firefox']:
         else:
             assert manifest['background']['service_worker'] == 'background.js'
 print('Both archives have exact public contents and reproducible SHA-256 hashes.')
+installer = ROOT / 'dist' / 'quiet-translate-install.py'
+assert installer.read_bytes() == (ROOT / 'scripts' / 'install.py').read_bytes().replace(b'\r\n', b'\n')
+checksums = dict(line.split()[::-1] for line in (ROOT / 'dist' / 'SHA256SUMS.txt').read_text().splitlines())
+assert checksums[installer.name] == hashlib.sha256(installer.read_bytes()).hexdigest()
+print('Agent installer matches its audited source and published checksum.')

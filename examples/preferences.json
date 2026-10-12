@@ -1,0 +1,14 @@
+{
+  "format": "quiet-translate-profile",
+  "version": 1,
+  "settings": {
+    "endpoint": "https://api.openai.com/v1",
+    "model": "",
+    "authMode": "bearer",
+    "tokenParameter": "max_completion_tokens",
+    "reasoningEffort": "default",
+    "target": "zh-CN",
+    "selectionMode": "button",
+    "theme": "system"
+  }
+}

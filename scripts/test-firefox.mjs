@@ -49,11 +49,19 @@ try {
     form.elements.endpoint.value=endpoint;form.elements.model.value='mock-model';form.elements.apiKey.value='dummy-local-test-key';
     form.elements.cache.checked=false;
   }, base+'/v1');
-  await driver.findElement(By.id('save')).click();
+  await driver.findElement(By.id('save-test')).click();
   await driver.wait(async () => (await driver.findElement(By.id('save-state')).getText())==='Saved', 10000);
-  await driver.findElement(By.id('test-connection')).click();
   await driver.wait(async()=> (await driver.findElement(By.id('connection-status')).getText()).startsWith('Connected'),10000);
-  check(true,'Save and connection test work through Firefox Promise APIs');
+  check(await driver.findElement(By.id('setup-success')).isDisplayed(),'One-action setup works through Firefox Promise APIs');
+  const migration = await driver.executeScript(async () => {
+    const {encryptProfile, readProfile} = await import(browser.runtime.getURL('shared/profile.js'));
+    const exported = await browser.runtime.sendMessage({type: 'qt-export-settings', includeKey: true});
+    const encrypted = await encryptProfile(exported.settings, 'firefox migration passphrase');
+    const restored = await readProfile(JSON.stringify(encrypted), 'firefox migration passphrase');
+    const safe = await browser.runtime.sendMessage({type: 'qt-export-settings'});
+    return {encrypted: !JSON.stringify(encrypted).includes('dummy-local-test-key'), restored: restored.settings.apiKey === 'dummy-local-test-key', safe: !('apiKey' in safe.settings)};
+  });
+  check(migration.encrypted && migration.restored && migration.safe, 'Firefox encrypted backup round-trip keeps the default export key-free');
   await writeFile(path.join(output, 'firefox-settings.png'), await driver.takeScreenshot(), 'base64');
   const optionsHandle=await driver.getWindowHandle();
   await driver.switchTo().newWindow('tab');await driver.get(base+'/article');

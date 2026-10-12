@@ -1,6 +1,11 @@
 node_modules/
 dist/
 local-install/
+local-install.backup-*/
+.quiet-translate-stage-*/
+.quiet-translate-install.json
+quiet-translate-preferences.json
+quiet-translate-encrypted.json
 output/
 .playwright/
 .playwright-cli/

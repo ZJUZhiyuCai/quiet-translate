@@ -45,6 +45,13 @@ async page => {
   if (await workspace.locator('#result').innerText() !== capture.result) throw new Error('Unexpected workspace output');
   await workspace.locator('h1').click();
   await workspace.screenshot({path: capture.output + (capture.locale === 'zh-CN' ? '/workspace.png' : '/workspace-en.png')});
+  const options = await context.newPage();
+  await options.goto(origin + '/options.html');
+  await options.setViewportSize({width: 1360, height: 960});
+  await options.waitForFunction(() => document.querySelector('[name=model]').value === 'demo-replay');
+  // Show the actual setup controls, without advertising replay latency as an API benchmark.
+  await options.evaluate(() => scrollTo(0, 0));
+  await options.screenshot({path: capture.output + (capture.locale === 'zh-CN' ? '/setup.png' : '/setup-en.png')});
   const version = await worker.evaluate(() => chrome.runtime.getManifest().version);
   return {version, locale: capture.locale, browser: context.browser().version(), replay: true, selected: await article.locator('qt-overlay .meta').innerText(), workspaceStatus: await workspace.locator('#status').innerText(), sourcePreserved: await workspace.locator('#source').inputValue() === capture.source};
 }
