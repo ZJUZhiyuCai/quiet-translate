@@ -81,9 +81,10 @@ Use desktop/browser UI tools if available. Open the returned `extension_page` in
 
 ### 4. Connect the user's API
 
-The first installation opens Preferences. Choose the provider preset, enter the model ID and the user's API key, then click **Save & test connection**. Allow access to the selected API host when the browser requests it. Keyless mode is available only for a compatible localhost service the user already runs.
+The first installation opens Preferences. Choose the provider preset and enter the user's API key. Models load automatically after typing pauses if host access is already granted; otherwise click **Allow & get models**. Open the arrow in the model field, type to search, and choose a model, or enter its ID manually. Then click **Save & test connection**. Keyless mode is available only for a compatible localhost service the user already runs; click **Get models** to list its installed models.
 
 - Presets supply endpoint and compatibility defaults; the exact model comes from the user's provider. Never invent a working model or provide the maintainer's API key.
+- Listing models does not save the key or select a model automatically. If discovery is unsupported, unavailable or denied, preserve the existing model and use manual entry. A listed model may still require account access or different compatibility parameters; verify with the connection test. Do not obtain extra cloud administration credentials merely to enumerate models.
 - Prefer entering the key in the extension's password field. Do not put it in shell arguments, URLs, screenshots, issue reports, or public files.
 - Read another local app's configuration only when the user specifically authorizes that source and provider. Do not scan the machine for credentials.
 - Agents can prepare a **key-free** JSON profile following [the example](examples/preferences.json), then import it in Preferences → Backup & migration. Importing fills a draft; review and save to apply it. Plaintext profiles containing keys are refused.

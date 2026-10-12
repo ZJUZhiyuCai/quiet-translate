@@ -4,6 +4,7 @@ import {TranslationCache} from './shared/cache.js';
 import {TranslationEngine} from './shared/engine.js';
 import {SettingsStore} from './shared/settings.js';
 import {api as chrome} from './shared/platform.js';
+import {modelConnection, fetchModels} from './shared/models.js';
 
 const cache = new TranslationCache();
 const engine = new TranslationEngine(cache);
@@ -107,6 +108,24 @@ chrome.runtime.onMessage.addListener((message, sender, reply) => {
 });
 
 chrome.runtime.onConnect.addListener(port => {
+  if (port.name === 'qt-models') {
+    if (!trusted(port.sender)) { port.disconnect(); return; }
+    const controller = new AbortController(); let started = false;
+    port.onDisconnect.addListener(() => controller.abort());
+    port.onMessage.addListener(message => {
+      if (started || message?.type !== 'list') return;
+      started = true;
+      (async () => {
+        await ready;
+        const connection = modelConnection(message.settings, settings);
+        if (!await chrome.permissions.contains({origins: [new URL(connection.endpoint).origin + '/*']})) throw new Error(t('请允许访问此接口后获取模型，或继续手动填写。'));
+        return await fetchModels(connection, {signal: controller.signal});
+      })().then(result => { if (!controller.signal.aborted) port.postMessage({ok: true, ...result}); }, error => {
+        if (!controller.signal.aborted) port.postMessage({ok: false, error: readableError(error)});
+      }).finally(() => port.disconnect()).catch(() => {});
+    });
+    return;
+  }
   if (port.name !== 'qt-translate' || port.sender?.id !== chrome.runtime.id) { port.disconnect(); return; }
   const jobs = new Map();
   let disconnected = false, pulse;

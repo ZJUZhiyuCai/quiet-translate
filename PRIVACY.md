@@ -6,6 +6,8 @@ Quiet Translate has no project-operated backend, analytics, advertising, or tele
 
 When you translate, the extension sends the selected text, a nearby page passage, or text submitted in the workspace to the API URL you configured. The request includes the translation prompt, target language, glossary, model ID, and API credential (unless using a keyless localhost service). It does not separately send the page URL, title, browsing history, cookies, or a user identifier. Text you translate can itself contain URLs or personal information.
 
+In Preferences, entering an API key starts model-list discovery after an 800 ms pause if the selected host already has permission. Otherwise, **Allow & get models** requests that permission on a click; manual model entry always remains available. You can also click **Get models** to refresh using a draft key, or the saved key for the exact saved endpoint. These GET requests send the API credential to the selected API host, without article text, cookies, or a translation request. Model Studio uses its catalog path on the same regional host. Redirects are refused. Opening Preferences or selecting a provider alone does not start discovery, and fetching a list does not save a draft key or model.
+
 Page translation starts after you enable it, or on exact hostnames you add to the auto-translate list. It processes content near the viewport as you scroll. Default selection mode waits for a click; optional instant selection and Alt-hover modes submit selected/hovered passages. Editable fields, standalone code blocks, navigation, hidden content, and explicitly excluded content are skipped by automatic page translation. Review sensitive text before submitting it manually.
 
 ## What stays in the browser
@@ -13,6 +15,7 @@ Page translation starts after you enable it, or on exact hostnames you add to th
 - Settings and API credentials: extension-origin IndexedDB. They are not browser-synced and are never returned to content scripts or website JavaScript. The credential is not encrypted against someone who controls your OS account/browser profile.
 - Translation cache: up to approximately 4 MB for 7 days, keyed by a hash of source text and translation settings. Values contain translated text; translations can contain personal information. Disable or clear this cache in Preferences. Incognito requests do not write to the persistent cache.
 - Workspace drafts: not automatically persisted. Text explicitly opened from a selection is briefly transferred through browser session storage and removed when the workspace consumes it. Pasted/imported text stays in that tab unless submitted to the API.
+- Discovered model lists: kept only in the current Preferences tab, not exported, synced, or cached on disk. Changing the key, endpoint or authentication mode, selecting a preset, or importing settings discards the list and cancels its request. Closing the tab cancels pending discovery.
 
 ## Your controls
 
@@ -22,8 +25,8 @@ The optional agent installer downloads releases and checksums from GitHub. GitHu
 
 Change providers, remove the saved key, disable caching, clear cached translations, disable individual sites, or uninstall the extension. Changing the API domain requires entering the new provider's credential; the previous key is not silently reused. Only HTTPS API endpoints and HTTP loopback endpoints are accepted. Redirects are refused and cookies are omitted from API requests.
 
-Browser permissions let the extension inject translation UI into ordinary web pages, use the current tab, offer context-menu commands, and store preferences locally. API host access is requested when you save the chosen endpoint. Broad content-script matches enable selection translation across sites; they do not mean that every page is sent to an API.
+Browser permissions let the extension inject translation UI into ordinary web pages, use the current tab, offer context-menu commands, and store preferences locally. API host access is requested when you save the chosen endpoint or explicitly request its model list. Automatic discovery never opens a permission prompt. Broad content-script matches enable selection translation across sites; they do not mean that every page is sent to an API.
 
 Firefox declares `authenticationInfo` and `websiteContent` transmission permissions because translating sends your credential and text to your chosen provider. This declaration is not an assertion that the project collects those data.
 
-Updated: 2026-10-12. Changes to data handling must be documented here before release. Report concerns using [private vulnerability reporting](https://github.com/ZJUZhiyuCai/quiet-translate/security/advisories/new).
+Updated: 2026-10-13. Changes to data handling must be documented here before release. Report concerns using [private vulnerability reporting](https://github.com/ZJUZhiyuCai/quiet-translate/security/advisories/new).

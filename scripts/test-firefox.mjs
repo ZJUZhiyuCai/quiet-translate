@@ -1,5 +1,5 @@
 // Real Firefox integration: a fresh temporary profile and a localhost-only dummy API.
-import {Builder, By, until} from 'selenium-webdriver';
+import {Builder, By, Key, until} from 'selenium-webdriver';
 import firefox from 'selenium-webdriver/firefox.js';
 import {cp, readFile, writeFile, mkdir} from 'node:fs/promises';
 import {spawn} from 'node:child_process';
@@ -46,9 +46,21 @@ try {
   check(!publicSettings.configured && !('apiKey' in publicSettings), 'Public settings are unconfigured and never expose the API key');
   await driver.executeScript((endpoint) => {
     const form=document.querySelector('form');
-    form.elements.endpoint.value=endpoint;form.elements.model.value='mock-model';form.elements.apiKey.value='dummy-local-test-key';
+    form.elements.endpoint.value=endpoint;form.elements.model.value='';
     form.elements.cache.checked=false;
   }, base+'/v1');
+  const keyField = await driver.findElement(By.css('[name=apiKey]')), modelField = await driver.findElement(By.css('[name=model]'));
+  await keyField.sendKeys('dummy-local-test-key');
+  await driver.wait(async () => (await driver.findElement(By.id('models-status')).getAttribute('data-state')) === 'ok', 10000);
+  check(await driver.findElement(By.id('model-toggle')).isEnabled() && !(await driver.executeScript(async () => (await browser.runtime.sendMessage({type:'qt-settings'})).settings)).configured, 'Firefox automatically fetches models using an unsaved key without saving the connection');
+  await driver.findElement(By.id('model-toggle')).click();
+  check((await driver.findElements(By.css('#model-list [role=option]'))).length === 4 && (await driver.findElements(By.css('#model-list img'))).length === 0, 'Firefox model picker filters invalid entries and renders remote names safely');
+  await modelField.sendKeys('fast', Key.ARROW_DOWN, Key.ENTER);
+  check((await modelField.getAttribute('value')) === 'fast-model' && (await modelField.getAttribute('aria-expanded')) === 'false', 'Firefox keyboard search selects a model without submitting settings');
+  await keyField.clear(); await keyField.sendKeys('dummy-unsupported');
+  await driver.wait(async () => (await driver.findElement(By.id('models-status')).getAttribute('data-state')) === 'error', 10000);
+  check(await modelField.isEnabled() && (await modelField.getAttribute('value')) === 'fast-model', 'Firefox unsupported providers retain manual entry and the selected model');
+  await keyField.clear(); await keyField.sendKeys('dummy-local-test-key');
   await driver.findElement(By.id('save-test')).click();
   await driver.wait(async () => (await driver.findElement(By.id('save-state')).getText())==='Saved', 10000);
   await driver.wait(async()=> (await driver.findElement(By.id('connection-status')).getText()).startsWith('Connected'),10000);

@@ -24,7 +24,7 @@ async page => {
     await options.locator('#provider').selectOption(id);
     const draft = await options.evaluate(() => Object.fromEntries(new FormData(document.querySelector('form'))));
     check(draft.endpoint === endpoint && draft.model === model && draft.reasoningEffort === effort && draft.apiKey === '' && draft.authMode === 'bearer', `${id} fills endpoint/model/compatibility and discards the previous draft key`);
-    check(await options.locator('#provider-docs').isVisible() && await options.locator(model ? '[name=apiKey]' : '[name=model]').evaluate(el => el === document.activeElement), `${id} exposes official docs and focuses the next required field`);
+    check(await options.locator('#provider-docs').isVisible() && await options.locator('[name=apiKey]').evaluate(el => el === document.activeElement), `${id} exposes official docs and focuses the key before choosing a model`);
   }
   check(providerRequests === 0, 'Browsing presets never sends a provider request');
   const saved = await options.evaluate(async () => (await chrome.runtime.sendMessage({type: 'qt-settings'})).settings);

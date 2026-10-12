@@ -2,7 +2,7 @@
 
 Quiet Translate speaks the **OpenAI-compatible Chat Completions** protocol. It posts to `<base URL>/chat/completions`, requests streaming text, and supports JSON completion fallback. A native Anthropic Messages, Gemini, or OpenAI Responses endpoint is not interchangeable; use a compatible endpoint/gateway if your provider offers one.
 
-Choose a provider, review its filled-in base URL and starting model, then enter your own API key and use **Save & test connection**. Every value remains editable. Presets are drafts until saved; opening settings never replaces an existing custom endpoint or model. No paid service is bundled, and the extension itself does not sell credits.
+Choose a provider, review its filled-in base URL, and enter your own API key. Models load after typing pauses; use the arrow in the model field to open the list, then type to search and select an ID. **Save & test connection** applies the draft and verifies translation. Every value remains editable. Presets and discovered models are drafts until saved; opening settings never replaces an existing custom endpoint or model. No paid service is bundled, and the extension itself does not sell credits.
 
 | Preset | Base URL | Starting model | Official reference |
 |---|---|---|---|
@@ -26,6 +26,18 @@ Qwen keys are region-specific. The legacy Beijing/Singapore URLs above remain su
 Presets do not scan other applications for credentials, retrieve model lists, or make network requests merely when selected. Switching presets clears any unsaved key input. A previously saved key can be retained only on the same origin; a different origin requires that service's credential. Existing custom gateways are not relabeled as official services.
 
 Live paid-provider validation has used GLM 5.3 Flash through a compatible gateway. Other presets are verified against official documentation, captured request bodies, and isolated browser form tests; they have not all been tested with funded accounts.
+
+## Model discovery
+
+After an **800 ms typing pause**, an entered key is used to request the selected endpoint's model list if the browser has already granted host access. Otherwise **Allow & get models** offers the required permission on a click. **Get models** refreshes the list using the draft key, or the saved credential only when the normalized base URL exactly matches the saved endpoint. Keyless localhost services use this same button without a key.
+
+The model field is an editable dropdown: open its arrow, type part of an ID/name, use ↑/↓ and Enter, or click a result. Escape closes the list. It never replaces the current model just because a response arrived. IDs absent from a list still work as manual input. Switching to another model from a preset's list restores service-default reasoning when the old preset's reasoning setting is still in place, rather than carrying a model-specific thinking override to a different model.
+
+Discovery uses **GET `<base>/models`** for compatible providers and gateways. Primary references include [DeepSeek](https://api-docs.deepseek.com/api/list-models/), [Kimi](https://platform.kimi.com/docs/api/list-models), [MiniMax](https://platform.minimaxi.com/docs/api-reference/models/openai/list-models), [OpenAI](https://platform.openai.com/docs/api-reference/models/list), and [Ollama](https://docs.ollama.com/openai). Recognized Qwen regional/workspace URLs use the [Model Studio catalog](https://help.aliyun.com/zh/model-studio/list-models) at `/api/v1/models` on the **same host**, filtered to text generation and paginated locally. Beijing workspace URLs are the documented catalog route; an older shared endpoint may require manually replacing it with the account's workspace URL or using manual model entry. No separate cloud-administration credentials are requested for providers such as Doubao.
+
+An unsupported endpoint, denied permission, invalid key, empty list, malformed response, timeout or network error leaves manual entry available. Provider error bodies are not displayed. Some catalogs list platform models rather than models enabled for the current account, and some omit Chat Completions capability metadata; the list alone does **not** prove access, balance, or translation compatibility. Use the existing connection test for the chosen model.
+
+Lists live only in the current settings tab. Changing the key, endpoint, authentication mode or preset discards old results and cancels pending requests. Opening settings and browsing presets do not fetch models; a fetch does not save the key, send article text, or make a translation request. Requests refuse redirects, omit cookies, time out after 12 seconds, and stop at 4 MiB / 2,000 entries / 20 pages. A bounded or externally paginated partial list is labeled as partial, with manual entry still available. See [discovery validation](MODEL-DISCOVERY-QA.md).
 
 ## Compatibility controls
 

@@ -14,6 +14,7 @@ export const DEFAULTS = Object.freeze({
 });
 export const MAX_TEXT = 60000;
 export const PROMPT_VERSION = 4;
+export const MODEL_ID = /^[\w./:[\]-]{1,120}$/;
 
 export function normalizeText(value) {
   return String(value ?? '').replace(/\r\n?/g, '\n').replace(/\u0000/g, '').trim();
@@ -68,7 +69,7 @@ export function validateSettings(input, current = DEFAULTS) {
   }
   if (input.endpoint !== undefined) next.endpoint = endpointURL(input.endpoint);
   if (input.model !== undefined) {
-    if (typeof input.model !== 'string' || (input.model !== '' && !/^[\w./:[\]-]{1,120}$/.test(input.model))) throw new Error(t("模型名称格式不正确。"));
+    if (typeof input.model !== 'string' || (input.model !== '' && !MODEL_ID.test(input.model))) throw new Error(t("模型名称格式不正确。"));
     next.model = input.model;
   }
   if (typeof input.apiKey === 'string' && input.apiKey.trim()) {

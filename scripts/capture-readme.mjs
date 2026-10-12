@@ -25,6 +25,10 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'GET' && req.url === '/article') {
       res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'}); return res.end(article);
     }
+    if (req.method === 'GET' && req.url === '/v1/models') {
+      res.writeHead(200, {'Content-Type': 'application/json'});
+      return res.end(JSON.stringify({data: [{id: 'demo-replay'}, {id: 'demo-fast'}, {id: 'demo-long-context'}]}));
+    }
     if (req.method !== 'POST' || req.url !== '/v1/chat/completions') { res.writeHead(404); return res.end(); }
     let body = ''; for await (const part of req) body += part;
     const input = JSON.parse(body).messages.at(-1).content;
