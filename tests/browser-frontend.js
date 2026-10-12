@@ -104,15 +104,16 @@ async page => {
   await article.locator('qt-overlay .translation[data-loading=false]').waitFor();
   const panelAppearance = () => article.locator('qt-overlay .translation').evaluate(e => {
     const style = getComputedStyle(e), panel = getComputedStyle(e.closest('.panel'));
+    const controls = getComputedStyle(e.closest('.panel').querySelector('header'));
     const luminance = color => {
       const rgb = color.match(/[\d.]+/g).slice(0, 3).map(v => Number(v) / 255).map(v => v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
       return rgb[0] * 0.2126 + rgb[1] * 0.7152 + rgb[2] * 0.0722;
     };
     const fg = luminance(style.color), bg = luminance(panel.backgroundColor);
-    return {contrast: (Math.max(fg, bg) + 0.05) / (Math.min(fg, bg) + 0.05), sansSerif: style.fontFamily.includes('sans-serif')};
+    return {contrast: (Math.max(fg, bg) + 0.05) / (Math.min(fg, bg) + 0.05), sansSerif: controls.fontFamily.includes('sans-serif'), readingFace: style.fontFamily !== controls.fontFamily && /(?:^|,\s*)serif$/.test(style.fontFamily)};
   });
   const light = await panelAppearance();
-  check(light.contrast >= 4.5 && light.sansSerif, 'Light selection text remains readable and keeps its own font after host isolation');
+  check(light.contrast >= 4.5 && light.sansSerif && light.readingFace, 'Light selection keeps readable text and distinct control/reading fonts after host isolation');
   const first = await panel.boundingBox();
   await article.evaluate(() => scrollBy(0, 60)); await article.waitForTimeout(120);
   const moved = await panel.boundingBox();
@@ -138,7 +139,7 @@ async page => {
   await worker.evaluate(id => { chrome.tabs.sendMessage(id, {type: 'qt-selection', text: 'A dark reading surface still needs readable text.'}); }, tabId);
   await article.locator('qt-overlay .translation[data-loading=false]').waitFor();
   const dark = await panelAppearance();
-  check(dark.contrast >= 4.5 && dark.sansSerif, 'Dark selection text has at least 4.5:1 contrast after host isolation');
+  check(dark.contrast >= 4.5 && dark.sansSerif && dark.readingFace, 'Dark selection keeps readable text and distinct control/reading fonts after host isolation');
   await article.screenshot({path: output + '/selection-dark.png'});
   await article.keyboard.press('Escape');
   await worker.evaluate(id => { chrome.tabs.sendMessage(id, {type: 'qt-selection', text: 'TEST_401 this deliberately fails.'}); }, tabId);
