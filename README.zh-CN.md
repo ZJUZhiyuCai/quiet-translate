@@ -10,7 +10,7 @@
 
 [![CI](https://github.com/ZJUZhiyuCai/quiet-translate/actions/workflows/ci.yml/badge.svg)](https://github.com/ZJUZhiyuCai/quiet-translate/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-397965.svg)](LICENSE)
 
-[**下载 v1.2.0**](https://github.com/ZJUZhiyuCai/quiet-translate/releases/latest) · [安装与浏览器支持](docs/BROWSERS.md) · [API 配置](docs/PROVIDERS.md) · [反馈问题](https://github.com/ZJUZhiyuCai/quiet-translate/issues/new/choose)
+[**让 Agent 安装**](INSTALL.md) · [下载 v1.3.0](https://github.com/ZJUZhiyuCai/quiet-translate/releases/latest) · [安装与浏览器支持](docs/BROWSERS.md) · [API 配置](docs/PROVIDERS.md) · [反馈问题](https://github.com/ZJUZhiyuCai/quiet-translate/issues/new/choose)
 
 ![保留原文的双语阅读](docs/assets/bilingual.png)
 
@@ -22,31 +22,48 @@
 - **自带 API**：支持 OpenAI 兼容 Chat Completions 接口，提供多个服务地址预设。模型、密钥和 API 费用由使用者自行管理。
 - **自然融入**：无常驻悬浮球；细边线、柔和底色、纯文字三种样式，深浅色、术语表、网站规则和本地缓存。界面跟随浏览器显示中英文，提供 12 种目标语言。
 
-**1.2.0** 改进了阅读字体、控件和中英混排输入。译文采用更有书页感的衬线字体，界面保持清晰；字体取自本机，网页中的双语译文继续沿用原网站字体。[更新记录 →](CHANGELOG.md)
+**1.3.0** 加入 Agent 辅助安装与更新、一键保存并测试 API、跨浏览器加密迁移。阅读字体继续取自本机，网页中的双语译文沿用原网站字体。[更新记录 →](CHANGELOG.md)
 
 ### 选中一段，继续阅读
 
 浮层保留原文摘要，可固定、复制，也可展开到长文工作台。
 
-![v1.2.0 中文划线浮层，固定在原文段落下方](docs/assets/selection.png)
+![v1.3.0 中文划线浮层，固定在原文段落下方](docs/assets/selection.png)
 
 ### 长一点，也能从容对照
 
 粘贴或导入文字，译文随生成展开，完成后可导出双语文本。窄窗口也能直接找到翻译按钮。
 
-![v1.2.0 中文长文工作台，英文原文与中文译文左右对照](docs/assets/workspace.png)
+![v1.3.0 中文长文工作台，英文原文与中文译文左右对照](docs/assets/workspace.png)
 
-截图来自实际运行的 v1.2.0，使用项目自制文章和本地回放的固定演示译文。划线和工作台展示的是缓存完成状态，不代表 API 响应速度。[图片来源与复现方法 →](docs/assets/README.md)
+截图来自实际运行的 v1.3.0，使用项目自制文章和本地回放的固定演示译文。划线和工作台展示的是缓存完成状态，不代表 API 响应速度。[图片来源与复现方法 →](docs/assets/README.md)
 
-## 安装
+## 交给你的 Agent 安装
 
-**Chrome / Edge / Comet**：下载 Releases 中的 Chromium ZIP，解压到固定目录；进入浏览器扩展管理页，打开开发者模式，点“加载未打包的扩展程序”，选择含 `manifest.json` 的文件夹。Brave 可使用同一包，但本轮尚未单独实测。
+复制下面这段给桌面 Agent，把 Comet 换成你使用的浏览器即可：
 
-**Firefox**：下载 Firefox ZIP 并解压；在 `about:debugging` →“此 Firefox”→“临时载入附加组件”中选 `manifest.json`。当前是**未签名开发包，重启后需要重新加载**，尚未发布到 AMO。
+```text
+帮我在 Comet 安装 Quiet Translate：https://github.com/ZJUZhiyuCai/quiet-translate
+先读 INSTALL.md，按其中流程操作。若已安装，沿用原目录更新，保留设置。
+自动完成下载、校验和浏览器中可操作的步骤；需要我确认权限或填写自己的 API 时再提示。
+最后验证扩展版本、连接测试和一次实际翻译，不要把解压成功当成安装完成。
+```
 
-首次安装会打开设置。填写接口地址、模型 ID 和自己的 API 密钥，保存并允许访问接口，再测试连接。已打开的网页需要刷新。详见[兼容矩阵、更新方式和限制](docs/BROWSERS.md)。Safari 和移动端尚未完成验证。
+[Agent 安装指南](INSTALL.md)包含首次安装、更新、回退和迁移。Release 提供仅依赖 Python 3.10+ 标准库的安装器，自动下载并校验安装包。具备桌面操作能力的 Agent 可以继续完成浏览器加载；遇到无法操作的权限提示或文件选择框，会给出准确的剩余步骤。**无需商店账号，也无需本项目账号。**
 
-**已安装 Chromium 版本？** 将新版本覆盖到原来的安装目录，在扩展管理页点击“重新加载”，再刷新需要翻译的网页。沿用原来的安装，可以保留已保存的 API 配置和偏好。
+Chrome、Edge、Comet 使用 Chromium 包；Brave 可使用同一包，但尚未单独实测。Firefox 仍是**未签名临时安装，重启后需要重新加载**。Safari 和移动端尚未支持。[手动安装与兼容矩阵 →](docs/BROWSERS.md)
+
+### 连好 API，开始阅读
+
+选择服务商，填写自己的**模型 ID 和 API 密钥**，点击**保存并测试连接**，按浏览器提示允许访问接口。测试成功后可直接打开长文工作台；刷新已打开的文章页即可使用划线翻译。
+
+![v1.3.0 中文设置页：保存并测试连接，以及备份与迁移入口](docs/assets/setup.png)
+
+设置截图使用本机演示服务，不含个人密钥，也未展示真实模型的连接速度。预设只填写服务地址，每位用户使用自己的模型和 API。
+
+**更新旧版：** 让 Agent 沿用原来的加载目录更新，再重新加载同一张扩展卡片，可以保留 API 设置和偏好。安装器保留旧代码备份以便回退；更新由用户委托 Agent 执行，不会在后台自行更新。
+
+**换浏览器或目录：** 在“偏好设置 → 备份与迁移”中导出不含密钥的配置，或包含密钥的加密备份；在新安装中读取、确认接口地址，再保存并测试。1.3.0 之前的版本先原地更新，再导出。[迁移步骤 →](INSTALL.md#move-to-another-folder-or-browser)
 
 ## 常用操作
 
@@ -67,7 +84,7 @@
 
 **2026 年 10 月 12 日**的 GLM 5.3 Flash 实测覆盖 MDN、Wikipedia、Paul Graham：关闭缓存的 5 次划线，首字中位数 **1.344 秒**；7,167 字符的工作台样本 **11.073 秒**完成。这轮测量早于最后的字体调整，属于特定网络和模型下的小样本，不是严格对照实验或速度承诺。[逐项测量与限制 →](docs/FRONTEND-QA.md#live-api-sample)
 
-1.2.0 在 Chrome、Edge、Comet 中各通过 **64 项检查**，Firefox 通过 **9 项端到端检查**，覆盖排版、划线定位、设置状态冲突和深浅色对比度。单元测试和安装包可复现检查也已通过。[新版验证 →](docs/FRONTEND-QA.md) · [此前的压力与协议验证 →](docs/QA.md)
+1.3.0 在 Chrome、Edge、Comet 中各通过 **80 项检查**，Firefox 通过 **10 项端到端检查**，覆盖排版、划线定位、首次配置、加密迁移和深浅色对比度。安装器还验证了重复安装、更新失败恢复、包校验和回退；单元测试与安装包可复现检查也已通过。[安装与迁移验证 →](docs/AGENT-INSTALL-QA.md) · [界面验证 →](docs/FRONTEND-QA.md) · [此前的压力与协议验证 →](docs/QA.md)
 
 ## 数据与隐私
 

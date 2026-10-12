@@ -56,6 +56,12 @@ chrome.runtime.onMessage.addListener((message, sender, reply) => {
     await ready;
     switch (message?.type) {
       case 'qt-settings': return {settings: publicSettings(settings)};
+      case 'qt-export-settings': {
+        assertTrusted(sender);
+        const exported = {...settings};
+        if (message.includeKey !== true) delete exported.apiKey;
+        return {settings: exported};
+      }
       case 'qt-save': {
         assertTrusted(sender);
         const next = validateSettings(message.settings || {}, settings);

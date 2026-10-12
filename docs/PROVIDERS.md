@@ -22,7 +22,9 @@ These are protocol/URL presets. Live paid-provider validation for the initial re
 - **Authentication** normally sends a Bearer API key. Keyless mode works only with `localhost` or `127.0.0.1`, and removes any saved key. Your local model must already be installed and running with a compatible endpoint. The extension does not install a local model.
 - HTTPS is required outside loopback. The URL may include `/chat/completions`; it is normalized to the base URL. Credentials, query parameters, and fragments in URLs are rejected.
 
-Save before testing the connection. The connection test bypasses cache and measures when the first visible translation arrives. Changing domains requires a new credential; the previous service's key is never silently forwarded.
+Use **Save & test connection** to save and verify in one action. The separate **Test saved connection** button checks the persisted configuration while preserving any unsaved draft. Tests bypass cache and measure when the first visible translation arrives. Changing domains requires a new credential; the previous service's key is never silently forwarded.
+
+Agents may prepare a [key-free profile](../examples/preferences.json) with the endpoint, model and preferences, then use Preferences → Backup & migration → Import. Importing is a draft until saved. For a full migration, the old installation can export a password-encrypted backup containing the key. See [installation and migration](../INSTALL.md#move-to-another-folder-or-browser).
 
 ## Troubleshooting
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.0 — 2026-10-12
+
+- Agent-first installation guide and a dependency-free Python installer distributed with release checksums. Downloads the official package, verifies it before replacement, keeps a fixed directory and rollback backup, and reports file preparation separately from browser verification. No store account, browser policy edits, or credential scanning.
+- One-action **Save & test connection**, with a ready-to-read entry after a successful API probe. Existing saved-only and test-saved actions remain available.
+- Portable key-free preferences and optional password-encrypted backups for browser/folder migration. Imports are validated drafts until explicitly saved; a key-free import never silently reuses an existing key. Keys can be exported only by extension pages, never website content scripts.
+- Installer failure/recovery tests and Chromium onboarding/migration checks, including narrow-screen layout and content-script isolation; Firefox encrypted backup validation.
+
 ## 1.2.0 — 2026-10-12
 
 - Ivory-inspired typography separates system UI, CJK-first input, serif reading, and monospace connection values. Explicit body fonts prevent Chromium extension styles from shrinking the interface; all fonts remain local and inline page translations keep the site's typeface.

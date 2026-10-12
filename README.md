@@ -10,7 +10,7 @@ English · [简体中文](README.zh-CN.md)
 
 [![CI](https://github.com/ZJUZhiyuCai/quiet-translate/actions/workflows/ci.yml/badge.svg)](https://github.com/ZJUZhiyuCai/quiet-translate/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-397965.svg)](LICENSE)
 
-[**Download v1.2.0**](https://github.com/ZJUZhiyuCai/quiet-translate/releases/latest) · [Installation](docs/BROWSERS.md) · [Connect your API](docs/PROVIDERS.md) · [Report a bug](https://github.com/ZJUZhiyuCai/quiet-translate/issues/new/choose)
+[**Install with your agent**](INSTALL.md) · [Download v1.3.0](https://github.com/ZJUZhiyuCai/quiet-translate/releases/latest) · [Installation](docs/BROWSERS.md) · [Connect your API](docs/PROVIDERS.md) · [Report a bug](https://github.com/ZJUZhiyuCai/quiet-translate/issues/new/choose)
 
 ![Bilingual reading on an original demo article](docs/assets/bilingual.png)
 
@@ -22,35 +22,48 @@ English · [简体中文](README.zh-CN.md)
 - **Your API.** URL presets for OpenAI, DeepSeek, OpenRouter, SiliconFlow, and local Ollama. Custom compatible endpoints work too. Enter your own model and key; provider charges apply.
 - **Quiet by default.** No permanent floating button. Three translation styles, light/dark themes, glossary, per-site controls, and a local cache. Chinese/English UI; 12 target languages.
 
-Version **1.2.0** adds serif reading text, clearer system controls, and better Chinese/English input typography. It uses fonts already on your device; inline page translations keep the website's own typeface. [What's changed →](CHANGELOG.md)
+Version **1.3.0** adds agent-assisted installation and updates, one-action API setup, and encrypted migration between browsers. Reading fonts remain local; inline translations keep the website's own typeface. [What's changed →](CHANGELOG.md)
 
 ### Translate a passage, keep your place
 
 The selection card keeps the source nearby. Pin it while reading, copy the translation, or expand it into the workspace.
 
-![v1.2.0 English selection card, pinned below the original paragraph](docs/assets/selection-en.png)
+![v1.3.0 English selection card, pinned below the original paragraph](docs/assets/selection-en.png)
 
 ### Give longer text some room
 
 Import or paste text, watch the translation arrive, and export both languages together. The main action stays visible in narrow windows too.
 
-![v1.2.0 English workspace with original English text and Chinese translation](docs/assets/workspace-en.png)
+![v1.3.0 English workspace with original English text and Chinese translation](docs/assets/workspace-en.png)
 
-Screenshots show the actual v1.2.0 interface with an authored demo article and fixed sample translations replayed locally. Selection and workspace show completed cache hits, not API speed measurements. [Image sources and reproduction →](docs/assets/README.md)
+Screenshots show the actual v1.3.0 interface with an authored demo article and fixed sample translations replayed locally. Selection and workspace show completed cache hits, not API speed measurements. [Image sources and reproduction →](docs/assets/README.md)
 
-## Install
+## Let your agent install it
 
-| Browser | Install |
-|---|---|
-| Chrome, Edge, Comet | Download the **Chromium ZIP**, extract, enable Developer mode in Extensions, then **Load unpacked** |
-| Brave | Use the Chromium ZIP; this release has not been independently tested in Brave |
-| Firefox desktop | Download the **Firefox ZIP**, extract, open `about:debugging`, and **Load Temporary Add-on** → `manifest.json` |
+Copy this into your desktop agent, changing the browser name if needed:
 
-The first installation opens Preferences. Enter the **API base URL, model ID, and your key**, save, allow the API host, then test the connection. Refresh pages already open before installation.
+```text
+Install Quiet Translate in Comet: https://github.com/ZJUZhiyuCai/quiet-translate
+Read INSTALL.md and follow its workflow. If already installed, update in the same folder.
+Handle download, checksum verification and browser setup. Ask me for required confirmations or my own API details.
+Verify the loaded version, API connection and one translation before reporting success.
+```
 
-**Updating an unpacked Chromium installation?** Extract the new version into the same folder, click **Reload** on its extension card, then refresh the pages you want to translate. Keeping the original installation preserves its saved API configuration and preferences.
+The [agent guide](INSTALL.md) handles new installs, repeatable updates, rollback, and migration. The release includes a Python 3.10+ installer with no third-party dependencies. It prepares verified files; an agent with desktop UI access completes browser loading. If the agent cannot operate a browser confirmation or file chooser, it tells you the exact remaining step. **No store account is needed.**
 
-These are developer packages. Firefox is **unsigned and temporary until browser restart**. No store listings or Safari build are claimed. See the [tested browser/version matrix and update instructions](docs/BROWSERS.md).
+Chrome, Edge and Comet use the Chromium package. Brave uses the same package but has not been independently tested. Firefox remains an **unsigned temporary installation until restart**. Safari/mobile are not supported. [Manual installation and browser matrix →](docs/BROWSERS.md)
+
+### Connect once, then read
+
+Choose a provider, enter your **model ID and API key**, and click **Save & test connection**. Allow access to your API host when prompted. A successful test offers the text workspace; refresh existing article tabs to enable selection translation.
+
+![v1.3.0 API setup with one-action Save & test connection and backup navigation](docs/assets/setup-en.png)
+
+This setup screenshot uses a localhost demo, with no personal key and no live-provider connection result. Presets fill service addresses; each user supplies their own model and credentials.
+
+**Updating?** Ask your agent to update the original loaded directory, then reload the existing extension. Settings stay in that browser installation. A sibling code backup supports rollback; updates run when requested, not through a background updater.
+
+**Moving browsers or folders?** Preferences → Backup & migration exports a key-free profile or a password-encrypted backup containing the key. Read it in the new installation, review the endpoint, then save and test. Versions before 1.3.0 need an in-place update before exporting. [Migration steps →](INSTALL.md#move-to-another-folder-or-browser)
 
 ## Everyday shortcuts
 
@@ -71,7 +84,7 @@ Four requests maximum, with capacity reserved for selections. Identical requests
 
 In the **October 12, 2026** live sample with GLM 5.3 Flash, five selections across MDN, Wikipedia, and Paul Graham had **1.344 s median time to first text**, with cache disabled. A 7,167-character workspace sample completed in **11.073 s**. This sample preceded the final typography refinement; it is not a controlled comparison or a speed guarantee. [Measurements and limits →](docs/FRONTEND-QA.md#live-api-sample)
 
-For v1.2.0, Chrome, Edge, and Comet each passed **64 checks**; Firefox passed **9 end-to-end checks**. Coverage includes layout, selection positioning, settings races, and light/dark contrast. Node tests and reproducible-package checks also pass. [Frontend validation →](docs/FRONTEND-QA.md) · [Earlier stress and protocol checks →](docs/QA.md)
+For v1.3.0, Chrome, Edge, and Comet each passed **80 checks**; Firefox passed **10 end-to-end checks**. Coverage includes layout, selection positioning, settings races, onboarding, encrypted migration, and light/dark contrast. Filesystem tests cover install, repeat, update, rejected packages, and rollback. Node tests and reproducible-package checks also pass. [Installation validation →](docs/AGENT-INSTALL-QA.md) · [Frontend validation →](docs/FRONTEND-QA.md) · [Earlier stress and protocol checks →](docs/QA.md)
 
 ## Privacy
 

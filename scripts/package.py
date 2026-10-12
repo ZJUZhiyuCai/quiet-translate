@@ -43,4 +43,7 @@ def build(browser):
 
 if __name__ == '__main__':
     checksums = [build(browser) for browser in ['chromium', 'firefox']]
+    installer = (ROOT / 'scripts' / 'install.py').read_bytes().replace(b'\r\n', b'\n')
+    (ROOT / 'dist' / 'quiet-translate-install.py').write_bytes(installer)
+    checksums.append(f'{hashlib.sha256(installer).hexdigest()}  quiet-translate-install.py')
     (ROOT / 'dist' / 'SHA256SUMS.txt').write_bytes(('\n'.join(checksums) + '\n').encode('utf-8'))
