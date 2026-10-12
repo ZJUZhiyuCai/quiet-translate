@@ -1,5 +1,7 @@
 # Release validation — 1.1.0
 
+For the current unreleased interface upgrade, see [Frontend upgrade validation](FRONTEND-QA.md). The release results below retain their original version.
+
 Date: 2026-10-12, Windows. Public packages contain an empty bootstrap. Automated browser tests use disposable profiles, dummy credentials, and a local SSE server. Live-provider tests are separately identified; mock timings are never presented as model speed.
 
 ## Release checks

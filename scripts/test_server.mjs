@@ -9,8 +9,8 @@ const server = http.createServer(async (req, res) => {
     let data; try { data = JSON.parse(body); } catch { res.writeHead(400); return res.end('{}'); }
     stats.requests++; stats.active++; stats.maxActive = Math.max(stats.maxActive, stats.active);
     const source = data.messages.at(-1).content;
-    if (source.startsWith('TEST_401')) { stats.active--; res.writeHead(401); return res.end('{}'); }
-    if (source.startsWith('TEST_SLOW')) await new Promise(resolve => setTimeout(resolve, 3000));
+    if (source.startsWith('TEST_401') || data.model === 'TEST_401') { stats.active--; res.writeHead(401); return res.end('{}'); }
+    if (source.startsWith('TEST_SLOW') || data.model === 'TEST_SLOW') await new Promise(resolve => setTimeout(resolve, 3000));
     res.writeHead(200, {'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache'});
     const text = source.startsWith('TEST_XSS') ? '<img src=x onerror=alert(1)> 这只是一段文字。' : '【测试译文】' + source.slice(0, 90) + '。工具安静地融入阅读，让每一段内容都清楚自然，保留原文的意思与节奏。';
     let index = 0, ended = false;

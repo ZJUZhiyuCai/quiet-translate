@@ -13,12 +13,13 @@ function busy(value) {
   $('#target').disabled = value; $('#import').disabled = value;
   count();
 }
+function setLabel(text) { $('#translate-label').textContent = text; }
 async function start() {
   const text = source.value.trim();
   if (!text || task) return;
   if (!settings.configured) { notify(t("先在设置中连接翻译服务"), true); return; }
   translatedSource = text; resultText = ''; complete = false;
-  source.scrollTop = 0; $('.target-pane').scrollTop = 0;
+  source.scrollTop = 0; $('.target-body').scrollTop = 0;
   $('#copy').disabled = $('#download').disabled = true;
   $('#result').textContent = ''; $('#result').hidden = false; $('#empty').hidden = true; $('#error').hidden = true;
   $('#progress').style.width = '0'; $('#status').textContent = t("正在连接翻译服务…");
@@ -38,13 +39,13 @@ async function start() {
     if (error.name === 'AbortError') $('#status').textContent = t("已停止 · 保留已显示的部分译文");
     else { $('#error').textContent = error.message + t("\n点击「重新翻译」即可重试。"); $('#error').hidden = false; $('#status').textContent = t("译文尚未完成"); }
   } finally {
-    task = null; busy(false); $('#translate').textContent = t("重新翻译 ↗");
+    task = null; busy(false); setLabel(t("重新翻译"));
     // Partial output stays visibly marked and cannot be exported as a finished translation.
   }
 }
 source.addEventListener('input', () => {
   if (translatedSource && source.value.trim() !== translatedSource) {
-    $('#status').textContent = t("原文已修改 · 点击翻译以更新右侧结果");
+    $('#status').textContent = t("原文已修改 · 点击翻译以更新结果");
     $('#copy').disabled = $('#download').disabled = true; complete = false;
   }
   count();
@@ -57,7 +58,7 @@ $('#clear').onclick = () => {
   source.value = ''; resultText = ''; translatedSource = ''; complete = false;
   $('#result').textContent = ''; $('#result').hidden = true; $('#empty').hidden = false; $('#error').hidden = true;
   $('#copy').disabled = $('#download').disabled = true;
-  $('#status').textContent = t("最多 60,000 字符 · 不保存原文草稿"); $('#translate').textContent = t("开始翻译 ↗"); count(); source.focus();
+  $('#status').textContent = t("最多 60,000 字符 · 不保存原文草稿"); setLabel(t("开始翻译")); count(); source.focus();
 };
 $('#target').onchange = () => {
   if (resultText) { complete = false; $('#copy').disabled = $('#download').disabled = true; $('#status').textContent = t("语言已切换 · 点击翻译以更新结果"); }
@@ -88,6 +89,8 @@ try {
     const draft = await send('qt-draft', {id: location.hash.slice(1)}); source.value = draft.text;
     history.replaceState(null, '', location.pathname);
   }
-  if (!settings.configured) { $('#status').textContent = t("先在「偏好设置」中连接翻译服务"); notify(t("还差一步：在偏好设置中连接翻译服务。"), true); }
+  // A first-run state is a setup step, not an error: keep a persistent, clickable entry point.
+  $('#setup').hidden = settings.configured;
+  if (!settings.configured) $('#status').textContent = t("先在「偏好设置」中连接翻译服务");
   count();
 } catch (error) { notify(error.message, true); }

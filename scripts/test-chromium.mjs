@@ -1,9 +1,10 @@
 // CLI-driven integration, always in an isolated profile, using only dummy credentials.
 import {spawn} from 'node:child_process';
+import {randomUUID} from 'node:crypto';
 import {existsSync} from 'node:fs';
 import {readFile,writeFile,mkdir,cp} from 'node:fs/promises';
 import path from 'node:path';
-const runId=Date.now().toString(), session='qt-'+runId;
+const runId=Date.now()+'-'+randomUUID().slice(0,8), session='qt-'+runId;
 const output=path.resolve('output/playwright/run-'+runId);
 await mkdir(output,{recursive:true});
 const extension=path.join(output,'extension');await cp('extension',extension,{recursive:true});
@@ -20,7 +21,7 @@ await writeFile(extension+'/manifest.json',JSON.stringify(manifest));
 await writeFile(extension+'/bootstrap.json',JSON.stringify({endpoint:base+'/v1',model:'mock-model',apiKey:'dummy-local-test-key'}));
 const legacy=/comet|msedge|brave/i.test(binary);
 const args=legacy?['--load-extension='+extension,'--disable-extensions-except='+extension]:['--enable-unsafe-extension-debugging'];
-const config={browser:{browserName:'chromium',launchOptions:{executablePath:binary,headless:true,args,ignoreDefaultArgs:['--disable-extensions']},contextOptions:{viewport:{width:1360,height:1000}}},outputDir:output};
+const config={browser:{browserName:'chromium',launchOptions:{executablePath:binary,headless:true,args,ignoreDefaultArgs:['--disable-extensions']},contextOptions:{viewport:{width:1360,height:1000},locale:process.env.QT_BROWSER_LOCALE || 'en-US'}},outputDir:output};
 await writeFile(output+'/config.json',JSON.stringify(config));
 const cli=path.resolve('node_modules/@playwright/cli/playwright-cli.js');
 async function command(...args){
@@ -39,8 +40,10 @@ try {
   }
   const setup=(await readFile('tests/browser-setup.js','utf8')).replaceAll('http://127.0.0.1:63717',base);
   await writeFile(output+'/setup.js',setup);await command('run-code','--filename',output+'/setup.js');
-  for(const file of ['browser-stress.js','browser-compatibility.js']){
-    const result=await command('run-code','--filename','tests/'+file);
+  for(const file of ['browser-stress.js','browser-compatibility.js','browser-frontend.js']){
+    const source=(await readFile('tests/'+file,'utf8')).replace('"__QT_OUTPUT__"',JSON.stringify(output));
+    await writeFile(output+'/'+file,source);
+    const result=await command('run-code','--filename',output+'/'+file);
     await writeFile(output+'/'+file+'.log',result);
     const checks=JSON.parse(result.split('### Result\n')[1].split('\n###')[0].trim());
     console.log(`${file}: ${checks.filter(c=>c.pass).length} checks passed`);

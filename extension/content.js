@@ -11,8 +11,9 @@
   const PROSE_SKIP = SKIP.replace(',code,', ',');
   let prefs = {target: 'zh-CN', selection: true, hover: true, selectionMode: 'button', style: 'line', fontSize: 100, autoSites: [], excludedSites: []};
   let enabled = false, pageEpoch = 0, visibleObserver, mutations, scanQueue = [], scanScheduled = false;
-  let pageActive = 0, hoverElement, hoverTimer, selectedText = '', selectionRect, selectionTimer;
+  let pageActive = 0, hoverElement, hoverTimer, selectedText = '', selectionRange, selectionTimer;
   let panelJob, pinned = false, panelSource = '', panelResult = '', panelTarget;
+  let panelRange, panelAnchor, panelSide, positionFrame;
   let port, disconnectTimer, mutationTimer, changedRoots = new Set(), lastURL = location.href;
   const records = new Map(), jobs = new Map(), segmentRoots = new Set();
   let overlay, shadow, launcher, panel, toast, toastTimer;
@@ -101,16 +102,19 @@
     overlay.style.cssText = 'all:initial!important;position:fixed!important;inset:0 auto auto 0!important;width:0!important;height:0!important;margin:0!important;padding:0!important;border:0!important;overflow:visible!important;z-index:2147483647!important;pointer-events:none!important;color-scheme:light dark!important;';
     shadow = overlay.attachShadow({mode: 'open'});
     shadow.innerHTML = `<style>
-      :host{--q-bg:#fffefb;--q-fg:#26342f;--q-muted:#78837c;--q-line:#e5e9e3;--q-accent:#397965;--q-soft:#f1f6f1;--q-shadow:0 12px 48px #172f2524,0 2px 8px #172f2512;color-scheme:light;font:14px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;color:var(--q-fg)}
-      @media(prefers-color-scheme:dark){:host{--q-bg:#202723;--q-fg:#e2e9e3;--q-muted:#9ea9a1;--q-line:#39453c;--q-accent:#9acfb7;--q-soft:#2c3830;--q-shadow:0 12px 48px #0006;color-scheme:dark}}
-      :host([data-theme=light]){--q-bg:#fffefb;--q-fg:#26342f;--q-muted:#78837c;--q-line:#e5e9e3;--q-accent:#397965;--q-soft:#f1f6f1;--q-shadow:0 12px 48px #172f2524,0 2px 8px #172f2512;color-scheme:light}
-      :host([data-theme=dark]){--q-bg:#202723;--q-fg:#e2e9e3;--q-muted:#9ea9a1;--q-line:#39453c;--q-accent:#9acfb7;--q-soft:#2c3830;--q-shadow:0 12px 48px #0006;color-scheme:dark}
+      :host{--q-scheme:light;--q-bg:#fffefb;--q-fg:#26342f;--q-muted:#626f66;--q-line:#e5e9e3;--q-accent:#397965;--q-error:#a45138;--q-soft:#f1f6f1;--q-shadow:0 12px 48px #172f2524,0 2px 8px #172f2512;color-scheme:light;font:14px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;color:var(--q-fg)}
+      @media(prefers-color-scheme:dark){:host{--q-scheme:dark;--q-bg:#202723;--q-fg:#e2e9e3;--q-muted:#9ea9a1;--q-line:#39453c;--q-accent:#9acfb7;--q-error:#e0a088;--q-soft:#2c3830;--q-shadow:0 12px 48px #0006;color-scheme:dark}}
+      :host([data-theme=light]){--q-scheme:light;--q-bg:#fffefb;--q-fg:#26342f;--q-muted:#626f66;--q-line:#e5e9e3;--q-accent:#397965;--q-error:#a45138;--q-soft:#f1f6f1;--q-shadow:0 12px 48px #172f2524,0 2px 8px #172f2512;color-scheme:light}
+      :host([data-theme=dark]){--q-scheme:dark;--q-bg:#202723;--q-fg:#e2e9e3;--q-muted:#9ea9a1;--q-line:#39453c;--q-accent:#9acfb7;--q-error:#e0a088;--q-soft:#2c3830;--q-shadow:0 12px 48px #0006;color-scheme:dark}
       *{box-sizing:border-box}button,select{font:inherit}button{display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;border:0;background:none;color:inherit;padding:6px;border-radius:7px}button:hover{background:var(--q-soft)}button:focus-visible,select:focus-visible{outline:2px solid var(--q-accent);outline-offset:3px}button:disabled{opacity:.5;cursor:default}[hidden]{display:none!important}
+      /* The host resets inherited page styles with all:initial!important. Set typography inside the shadow tree. */
+      .panel,.launch,.toast{font:14px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;color:var(--q-fg);color-scheme:var(--q-scheme)}
       .launch{position:fixed;width:32px;height:32px;border:1px solid var(--q-line);background:var(--q-bg);box-shadow:0 3px 14px #172f2525;color:var(--q-accent);font-size:14px;font-weight:650;border-radius:10px;pointer-events:auto}
-      .panel{position:fixed;width:min(410px,calc(100vw - 24px));max-height:min(560px,calc(100vh - 28px));border:1px solid var(--q-line);border-radius:16px;background:var(--q-bg);box-shadow:var(--q-shadow);pointer-events:auto;overflow:hidden;display:flex;flex-direction:column;text-align:left;letter-spacing:normal}
-      header{display:flex;align-items:center;gap:8px;padding:13px 16px;border-bottom:1px solid var(--q-line);flex-shrink:0}.brand{display:flex;align-items:center;gap:7px;font-weight:650;color:var(--q-accent)}.spacer{flex:1}.pin[aria-pressed=true]{color:var(--q-accent);background:var(--q-soft)}select{color:var(--q-muted);font-size:12px;border:0;background:transparent;max-width:105px;padding:3px}
-      .body{padding:18px 20px;overflow:auto;overscroll-behavior:contain;min-height:110px}.source{font-size:12px;color:var(--q-muted);max-height:74px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;padding-bottom:12px;margin-bottom:13px;border-bottom:1px solid var(--q-line)}.translation{white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px;line-height:1.85;user-select:text}.translation[data-loading=true]:empty::before{content:attr(data-loading-label);font-size:13px;color:var(--q-muted)}.translation[data-loading=true]:not(:empty)::after{content:'';display:inline-block;width:4px;height:14px;margin-left:5px;border-radius:2px;background:var(--q-accent);animation:blink 1s infinite}.error{font-size:13px;color:#bc6b4f;margin-top:12px}
-      footer{padding:10px 15px;border-top:1px solid var(--q-line);display:flex;align-items:center;gap:8px;flex-shrink:0}.meta{color:var(--q-muted);font-size:11px}.text-btn{font-size:12px}.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:10px 17px;border-radius:30px;background:var(--q-bg);color:var(--q-fg);border:1px solid var(--q-line);box-shadow:var(--q-shadow);font-size:13px;max-width:calc(100vw - 30px);pointer-events:auto;white-space:nowrap}
+      .panel{position:fixed;width:min(392px,calc(100vw - 24px));max-height:min(520px,calc(100vh - 28px));border:1px solid var(--q-line);border-radius:14px;background:var(--q-bg);box-shadow:var(--q-shadow);pointer-events:auto;overflow:hidden;display:flex;flex-direction:column;text-align:left;letter-spacing:normal}
+      header{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--q-line);flex-shrink:0}.brand{display:flex;align-items:center;gap:7px;font-weight:650;color:var(--q-accent)}.spacer{flex:1;min-width:0}.pin[aria-pressed=true]{color:var(--q-accent);background:var(--q-soft)}select{color:var(--q-muted);font-size:12px;border:0;background:transparent;max-width:105px;padding:3px}
+      /* Body owns the scroll so a long translation never pushes the actions out of reach. */
+      .body{padding:14px 16px;overflow:auto;overscroll-behavior:contain;min-height:0;flex:1 1 auto;scrollbar-width:thin}.source{font-size:11.5px;line-height:1.7;color:var(--q-muted);max-height:64px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;padding-bottom:10px;margin-bottom:11px;border-bottom:1px solid var(--q-line)}.translation{white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px;line-height:1.85;user-select:text}.translation[data-loading=true]:empty::before{content:attr(data-loading-label);font-size:13px;color:var(--q-muted)}.translation[data-loading=true]:not(:empty)::after{content:'';display:inline-block;width:4px;height:14px;margin-left:5px;border-radius:2px;background:var(--q-accent);animation:blink 1s infinite}.error{font-size:12.5px;line-height:1.7;color:var(--q-error,#bc6b4f);margin-top:11px}
+      footer{padding:8px 12px;border-top:1px solid var(--q-line);display:flex;align-items:center;gap:8px;flex-shrink:0;background:var(--q-bg)}.meta{color:var(--q-muted);font-size:11px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.text-btn{font-size:12px}.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:10px 17px;border-radius:30px;background:var(--q-bg);color:var(--q-fg);border:1px solid var(--q-line);box-shadow:var(--q-shadow);font-size:13px;max-width:calc(100vw - 30px);pointer-events:auto;white-space:nowrap}
       @keyframes blink{50%{opacity:.2}}@media(prefers-reduced-motion:reduce){*{animation:none!important}}
     </style>
     <button class="launch" aria-label="翻译选中文字" title="翻译 · Alt+Q" hidden>译</button>
@@ -136,24 +140,53 @@
     shadow.querySelector('.expand').addEventListener('click', () => message({type: 'qt-open-workspace', text: panelSource}).catch(error => notify(error.message)));
   }
   function notify(text) { ensureUI(); toast.textContent = text; toast.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { toast.hidden = true; }, 2600); }
-  function closePanel() { panelJob?.cancel(); panelJob = null; if (panel) panel.hidden = true; pinned = false; shadow?.querySelector('.pin').setAttribute('aria-pressed', 'false'); }
+  function closePanel() { panelJob?.cancel(); panelJob = null; if (panel) panel.hidden = true; panelRange = null; pinned = false; shadow?.querySelector('.pin').setAttribute('aria-pressed', 'false'); }
+  function rangeRect(range) {
+    if (!range?.commonAncestorContainer.isConnected) return null;
+    const rects = [...range.getClientRects()].filter(r => r.width && r.height);
+    return rects.filter(r => r.bottom >= 0 && r.top <= innerHeight).at(-1) || rects.at(-1);
+  }
+  function schedulePosition(refreshAnchor = false) {
+    if (refreshAnchor && !pinned) panelAnchor = null;
+    if (positionFrame) return;
+    positionFrame = requestAnimationFrame(() => { positionFrame = 0; positionPanel(); });
+  }
   function positionPanel() {
     if (!panel || panel.hidden) return;
-    const r = selectionRect || {left: Math.max(12, innerWidth - 440), bottom: 90, top: 80};
-    const width = Math.min(410, innerWidth - 24);
-    const height = Math.min(380, innerHeight - 28);
-    const left = Math.min(innerWidth - width - 12, Math.max(12, r.left));
-    let top = r.bottom + 12;
-    if (top + height > innerHeight - 12) top = Math.max(12, r.top - height - 12);
-    panel.style.left = left + 'px'; panel.style.top = top + 'px';
-    panel.style.maxHeight = Math.min(560, innerHeight - top - 14) + 'px';
+    const margin = 12, gap = 10;
+    const width = Math.min(392, innerWidth - margin * 2), maxHeight = Math.max(0, Math.min(520, innerHeight - margin * 2));
+    if (pinned && panel.style.top) {
+      const top = Math.max(margin, Math.min(parseFloat(panel.style.top), innerHeight - margin - Math.min(160, maxHeight)));
+      panel.style.top = top + 'px';
+      panel.style.left = Math.max(margin, Math.min(parseFloat(panel.style.left), innerWidth - width - margin)) + 'px';
+      panel.style.maxHeight = Math.max(0, Math.min(520, innerHeight - top - margin)) + 'px';
+      return;
+    }
+    if (!panelAnchor) {
+      panelAnchor = rangeRect(panelRange) || {left: innerWidth - 420, bottom: 80, top: 70};
+      const below = innerHeight - margin - panelAnchor.bottom - gap, above = panelAnchor.top - gap - margin;
+      const currentSpace = panelSide === 'above' ? above : below;
+      if (!panelSide || currentSpace < Math.min(160, maxHeight)) panelSide = below >= Math.min(320, maxHeight) || below >= above ? 'below' : 'above';
+    }
+    const r = panelAnchor, space = panelSide === 'above' ? r.top - gap - margin : innerHeight - margin - r.bottom - gap;
+    // Reserve a side for the whole stream. Measure its real height, including errors and controls.
+    panel.style.maxHeight = (space >= 160 ? Math.min(maxHeight, space) : maxHeight) + 'px';
+    const height = panel.offsetHeight;
+    const top = panelSide === 'above' ? r.top - gap - height : r.bottom + gap;
+    panel.style.left = Math.max(margin, Math.min(r.left, innerWidth - width - margin)) + 'px';
+    panel.style.top = Math.max(margin, Math.min(top, innerHeight - height - margin)) + 'px';
   }
   async function showSelection(text, reuse = false) {
     text = (text || window.getSelection()?.toString() || '').trim();
     if (!text) { notify(t("先选中一段文字，再按 Alt+Q")); return; }
     if (blocked()) { notify(t("本站已停用轻译，可在插件菜单中恢复")); return; }
     ensureUI(); launcher.hidden = true; panelJob?.cancel();
-    if (!reuse) panelTarget = prefs.target;
+    if (!reuse) {
+      panelTarget = prefs.target;
+      const selection = window.getSelection();
+      panelRange = selection?.rangeCount && selection.toString().trim() === text && !own(selection.anchorNode) ? selection.getRangeAt(0).cloneRange() : selectedText === text ? selectionRange?.cloneRange() : null;
+      panelAnchor = null; panelSide = null;
+    }
     panelSource = text; panelResult = ''; panel.hidden = false;
     shadow.querySelector('select').value = panelTarget;
     const output = shadow.querySelector('.translation'), errorBox = shadow.querySelector('.error'), meta = shadow.querySelector('.meta');
@@ -165,6 +198,7 @@
       if (panelJob !== task) return;
       output.textContent = update.text; panelResult = update.text;
       if (update.total > 1) meta.textContent = t("{0} / {1} 段", update.completed, update.total);
+      schedulePosition();
     }, panelTarget);
     panelJob = task;
     try {
@@ -177,7 +211,7 @@
       if (panelJob !== task || error.name === 'AbortError') return;
       errorBox.textContent = error.message; errorBox.hidden = false;
       shadow.querySelector('.retry').hidden = false; meta.textContent = panelResult ? t("译文尚未完成") : t("未能完成");
-    } finally { if (panelJob === task) output.dataset.loading = 'false'; }
+    } finally { if (panelJob === task) { output.dataset.loading = 'false'; schedulePosition(); } }
   }
   function inspectSelection(event) {
     if (!prefs.selection || blocked() || event?.composedPath().some(node => node === overlay)) return;
@@ -190,7 +224,7 @@
       const rects = [...selection.getRangeAt(0).getClientRects()].filter(r => r.width && r.height && r.bottom >= 0 && r.top <= innerHeight);
       if (!rects.length) return;
       const rect = rects.at(-1); selectedText = text;
-      selectionRect = {left: rect.left, top: rect.top, bottom: rect.bottom};
+      selectionRange = selection.getRangeAt(0).cloneRange();
       ensureUI();
       if (prefs.selectionMode === 'instant') { if (!pinned) showSelection(text); return; }
       launcher.style.left = Math.min(innerWidth - 42, Math.max(8, event?.clientX || rect.right)) + 'px';
@@ -217,8 +251,12 @@
     hoverElement = event.target.closest?.(BLOCK);
   }, {passive: true});
   window.addEventListener('blur', () => { clearTimeout(hoverTimer); if (launcher) launcher.hidden = true; });
-  window.addEventListener('resize', positionPanel, {passive: true});
-  window.addEventListener('scroll', () => { if (launcher) launcher.hidden = true; }, {passive: true});
+  window.addEventListener('resize', () => schedulePosition(true), {passive: true});
+  window.addEventListener('scroll', event => {
+    if (event.composedPath().includes(overlay)) return;
+    if (launcher) launcher.hidden = true;
+    if (panel && !panel.hidden && !pinned) schedulePosition(true);
+  }, {passive: true, capture: true});
 
   function attachTranslation(record) {
     const host = document.createElement('qt-line'); host.setAttribute('data-qt-owned', 'translation');

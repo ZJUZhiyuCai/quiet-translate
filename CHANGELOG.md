@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Compact popup and text workspace, with pane-local toolbars, visible primary actions on narrow screens, and a persistent API setup entry.
+- Preferences start with the API connection, use matching section navigation, and keep keyboard-focused fields above the save bar. Saving preferences and testing a saved connection have independent feedback; removing a key preserves other unsaved fields and invalidates pending tests.
+- Selection cards stay within the viewport while streaming long results, follow their live text selection on page scroll, and remain still when pinned or scrolled internally.
+- Clearer secondary text and Chinese/English copy, including isolated light/dark selection typography; 28 additional Chromium frontend regression checks with layout screenshots.
+
 ## 1.1.1 — 2026-10-12
 
 - Normalize ZIP member ordering and platform metadata so Windows and Linux builds are byte-for-byte identical. 1.1.0 package contents matched across platforms, but their ZIP metadata/order differed. Translation behavior is unchanged.
