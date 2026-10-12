@@ -17,6 +17,10 @@ html{scroll-padding-bottom:110px}
 .setup-steps{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px;padding:0}
 .setup-steps li{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--muted);background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:5px 12px 5px 6px}
 .setup-steps b{display:grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--soft-strong);color:var(--accent);font-size:10.5px;font-weight:650;flex-shrink:0}
+.provider-help{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin-top:9px;color:var(--muted);font-size:11.5px;line-height:1.8}
+.provider-help p{flex:1 1 250px;margin:0;overflow-wrap:anywhere}
+.provider-help a{flex-shrink:0;white-space:nowrap}
+.provider-help a[hidden]{display:none}
 .style-options{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .style-options label{position:relative;cursor:pointer}
 .style-options input{position:absolute;inset:0;opacity:0;cursor:pointer}

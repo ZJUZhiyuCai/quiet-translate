@@ -60,7 +60,7 @@ export function endpointURL(input) {
 export function validateSettings(input, current = DEFAULTS) {
   const next = {...current};
   for (const key of ['selection', 'hover', 'cache']) if (typeof input[key] === 'boolean') next[key] = input[key];
-  for (const [key, values] of Object.entries({target: Object.keys(LANGUAGES), style: ['line', 'soft', 'plain'], theme: ['system', 'light', 'dark'], selectionMode: ['button', 'instant'], reasoningEffort: ['default', 'low', 'medium', 'high'], tokenParameter: ['max_tokens', 'max_completion_tokens'], authMode: ['bearer', 'none']})) {
+  for (const [key, values] of Object.entries({target: Object.keys(LANGUAGES), style: ['line', 'soft', 'plain'], theme: ['system', 'light', 'dark'], selectionMode: ['button', 'instant'], reasoningEffort: ['default', 'none', 'low', 'medium', 'high'], tokenParameter: ['max_tokens', 'max_completion_tokens'], authMode: ['bearer', 'none']})) {
     if (input[key] !== undefined) {
       if (!values.includes(input[key])) throw new Error(t("设置值不受支持：") + key);
       next[key] = input[key];

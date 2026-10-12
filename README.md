@@ -10,16 +10,18 @@ English · [简体中文](README.zh-CN.md)
 
 [![CI](https://github.com/ZJUZhiyuCai/quiet-translate/actions/workflows/ci.yml/badge.svg)](https://github.com/ZJUZhiyuCai/quiet-translate/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-397965.svg)](LICENSE)
 
-[**Install with your agent**](INSTALL.md) · [Download v1.3.0](https://github.com/ZJUZhiyuCai/quiet-translate/releases/latest) · [Installation](docs/BROWSERS.md) · [Connect your API](docs/PROVIDERS.md) · [Report a bug](https://github.com/ZJUZhiyuCai/quiet-translate/issues/new/choose)
+[**Install with your agent**](INSTALL.md) · [Download v1.3.1](https://github.com/ZJUZhiyuCai/quiet-translate/releases/latest) · [Installation](docs/BROWSERS.md) · [Connect your API](docs/PROVIDERS.md) · [Report a bug](https://github.com/ZJUZhiyuCai/quiet-translate/issues/new/choose)
 
 ![Bilingual reading on an original demo article](docs/assets/bilingual.png)
+
+**1.3.1** adds ready-to-edit presets for DeepSeek, Zhipu GLM, Qwen (Beijing / Singapore), Kimi, MiniMax, SiliconFlow, and Doubao. Presets fill the endpoint, starting model where available, and compatible request settings. On Mac, shortcuts display **⌥ Option** and **⌘ Cmd**. [Provider details →](docs/PROVIDERS.md)
 
 ## Read without losing your place
 
 - **Bilingual pages.** Keep the original text and links; add translations underneath. Only nearby passages enter the translation queue. Restore the page in one action.
 - **Selection and hover.** A small button appears after selection. Stream into a compact card, pin it, copy, or open it in the workspace. Hold Alt over a paragraph to translate just that passage.
 - **Room for long text.** Up to 60,000 characters, automatic chunking, ordered streaming, cancellation, TXT/Markdown import, and bilingual text export. Original and translation sit side by side in wide windows and stack in narrow ones.
-- **Your API.** URL presets for OpenAI, DeepSeek, OpenRouter, SiliconFlow, and local Ollama. Custom compatible endpoints work too. Enter your own model and key; provider charges apply.
+- **Your API.** Ready-to-edit Chinese provider presets, OpenAI, OpenRouter, and local Ollama. Presets fill addresses, starting models where available, and compatibility defaults; you supply your own key. Provider charges apply.
 - **Quiet by default.** No permanent floating button. Three translation styles, light/dark themes, glossary, per-site controls, and a local cache. Chinese/English UI; 12 target languages.
 
 Version **1.3.0** adds agent-assisted installation and updates, one-action API setup, and encrypted migration between browsers. Reading fonts remain local; inline translations keep the website's own typeface. [What's changed →](CHANGELOG.md)
@@ -55,11 +57,11 @@ Chrome, Edge and Comet use the Chromium package. Brave uses the same package but
 
 ### Connect once, then read
 
-Choose a provider, enter your **model ID and API key**, and click **Save & test connection**. Allow access to your API host when prompted. A successful test offers the text workspace; refresh existing article tabs to enable selection translation.
+Choose a provider, review its filled-in endpoint and model, enter your own **API key**, and click **Save & test connection**. Allow access to your API host when prompted. A successful test offers the text workspace; refresh existing article tabs to enable selection translation.
 
 ![v1.3.0 API setup with one-action Save & test connection and backup navigation](docs/assets/setup-en.png)
 
-This setup screenshot uses a localhost demo, with no personal key and no live-provider connection result. Presets fill service addresses; each user supplies their own model and credentials.
+This setup screenshot uses a localhost demo, with no personal key and no live-provider connection result. Presets now fill service addresses, starting models where available, and compatibility defaults. Doubao needs your enabled Model ID or endpoint ID; Ollama needs an installed model. [Provider details →](docs/PROVIDERS.md)
 
 **Updating?** Ask your agent to update the original loaded directory, then reload the existing extension. Settings stay in that browser installation. A sibling code backup supports rollback; updates run when requested, not through a background updater.
 
@@ -76,7 +78,7 @@ This setup screenshot uses a localhost demo, with no personal key and no live-pr
 | Translate in workspace | Ctrl+Enter / Cmd+Enter |
 | Close selection card | Esc |
 
-Change conflicting shortcuts in your browser's extension shortcut manager.
+On macOS, **Alt means ⌥ Option**: Option+T for bilingual pages, Option+Q for selections, Option+L for the workspace, and hold Option while hovering over a paragraph. Use **⌘ Cmd+Enter** to translate in the workspace. The UI labels follow the operating system. Change conflicting shortcuts in your browser's extension shortcut manager.
 
 ## Speed and verification
 
@@ -84,7 +86,7 @@ Four requests maximum, with capacity reserved for selections. Identical requests
 
 In the **October 12, 2026** live sample with GLM 5.3 Flash, five selections across MDN, Wikipedia, and Paul Graham had **1.344 s median time to first text**, with cache disabled. A 7,167-character workspace sample completed in **11.073 s**. This sample preceded the final typography refinement; it is not a controlled comparison or a speed guarantee. [Measurements and limits →](docs/FRONTEND-QA.md#live-api-sample)
 
-For v1.3.0, Chrome, Edge, and Comet each passed **80 checks**; Firefox passed **10 end-to-end checks**. Coverage includes layout, selection positioning, settings races, onboarding, encrypted migration, and light/dark contrast. Filesystem tests cover install, repeat, update, rejected packages, and rollback. Node tests and reproducible-package checks also pass. [Installation validation →](docs/AGENT-INSTALL-QA.md) · [Frontend validation →](docs/FRONTEND-QA.md) · [Earlier stress and protocol checks →](docs/QA.md)
+For v1.3.1, Chrome, Edge, and Comet each passed **110 checks** (including 30 provider/Mac-label checks); Firefox passed **10 end-to-end checks**. Coverage includes layout, selection positioning, settings races, onboarding, encrypted migration, and light/dark contrast. Filesystem tests cover install, repeat, update, rejected packages, and rollback. Node tests and reproducible-package checks also pass. [Provider and Mac-label validation →](docs/PROVIDER-PRESETS-QA.md) · [Installation validation →](docs/AGENT-INSTALL-QA.md) · [Frontend validation →](docs/FRONTEND-QA.md) · [Earlier stress and protocol checks →](docs/QA.md)
 
 ## Privacy
 

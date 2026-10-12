@@ -2,11 +2,11 @@
 
 The release contains two builds from the same source. They use browser Promise APIs and distinct Manifest V3 background configurations. No account with this project is needed.
 
-| Browser | Package | v1.3.0 validation on Windows, 2026-10-12 |
+| Browser | Package | v1.3.1 validation on Windows, 2026-10-12 |
 |---|---|---|
-| Chrome | `chromium.zip` | 154.0.8037.99: 24 stress/interaction + 12 structural + 28 frontend + 16 installation/migration checks passed |
-| Edge | `chromium.zip` | 156.0.4314.15: the same 80 checks passed |
-| Comet | `chromium.zip` | 139.1.7258.19069: the same 80 checks passed; live model/site testing also recorded |
+| Chrome | `chromium.zip` | 154.0.8037.99: 24 stress/interaction + 12 structural + 28 frontend + 16 installation/migration + 30 provider/Mac-label checks passed |
+| Edge | `chromium.zip` | 156.0.4314.15: the same 110 checks passed |
+| Comet | `chromium.zip` | 139.1.7258.19069: the same 110 checks passed; live model/site testing also recorded |
 | Brave | `chromium.zip` | Chromium-compatible build; not independently run in this release |
 | Firefox desktop | `firefox.zip` | 157.0.1: 10 end-to-end checks passed, including onboarding, streaming, page restoration, and long text |
 | Safari | None yet | Requires a separate macOS/Xcode packaging and validation pass |
@@ -23,7 +23,7 @@ Give your desktop agent the repository link and follow [INSTALL.md](../INSTALL.m
 1. Download the Chromium ZIP from [Releases](https://github.com/ZJUZhiyuCai/quiet-translate/releases/latest) and extract it into a permanent folder.
 2. Open your browser's Extensions page: `chrome://extensions` in Chrome/Comet, `edge://extensions` in Edge, or `brave://extensions` in Brave.
 3. Enable Developer mode, choose **Load unpacked**, and select the extracted folder containing `manifest.json`.
-4. Preferences opens on first installation. Enter the API base URL, model ID, and your own API key. Click **Save & test connection** and allow the requested API host.
+4. Preferences opens on first installation. Choose a provider preset, review the model, and enter your own API key; custom endpoints remain available. Click **Save & test connection** and allow the requested API host.
 5. Pin the extension if desired. Refresh pages that were already open before installation.
 
 To update, prefer the agent installer with `--directory` pointing to the existing loaded folder; it verifies the package, preserves a private bootstrap if present, and creates a rollback backup. Then click Reload on the same extension card and refresh existing pages. Manual updates may replace the public files in that same folder, retaining any private `bootstrap.json`. Keep the installation folder in place. The public ZIP has no credentials and will not configure an account for you.
@@ -42,4 +42,4 @@ Firefox's build uses module background scripts because Firefox does not implemen
 
 Browser internal pages, extension stores, some protected pages, built-in PDF viewers, canvas-rendered text, and cross-origin frames cannot be treated as ordinary article pages. Use the text workspace for copied text. Layout testing covers the documented fixtures and public pages, not every site. An extension changes page height when adding translations; the layout promise is to preserve original content and reading structure, not to keep every element at its previous vertical position.
 
-Shortcuts may be reserved by the OS, browser, or another extension. Change them in the browser's extension shortcut manager. On macOS, Alt is Option; the workspace supports Cmd+Enter as well as Ctrl+Enter, but macOS interaction testing remains open.
+Shortcuts may be reserved by the OS, browser, or another extension. Change them in the browser's extension shortcut manager. On macOS, Alt is **⌥ Option**; the UI now displays the matching key names, including in hover/selection hints. The workspace supports Cmd+Enter as well as Ctrl+Enter, but macOS interaction testing remains open.
