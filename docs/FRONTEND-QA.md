@@ -1,6 +1,6 @@
 # Frontend upgrade validation
 
-2026-10-12 · Windows · development branch based on v1.1.1. This report describes the unreleased frontend upgrade, not the downloadable v1.1.1 packages. MiniMax implemented the initial interface revision through DeepSeek Harness; Codex reviewed, corrected, and validated it.
+2026-10-12 · Windows · frontend upgrade included in v1.2.0. MiniMax implemented the initial interface revision through DeepSeek Harness; Codex reviewed, corrected, and validated it. The screenshots were captured during development, before the version label was advanced from 1.1.1 to 1.2.0.
 
 ## Accepted interface changes
 

@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.2.0 — 2026-10-12
 
 - Ivory-inspired typography separates system UI, CJK-first input, serif reading, and monospace connection values. Explicit body fonts prevent Chromium extension styles from shrinking the interface; all fonts remain local and inline page translations keep the site's typeface.
 - Compact popup and text workspace, with pane-local toolbars, visible primary actions on narrow screens, and a persistent API setup entry.
