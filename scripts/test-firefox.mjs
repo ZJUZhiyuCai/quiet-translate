@@ -81,7 +81,13 @@ try {
   await driver.executeScript(() => {window.__source=document.querySelector('#first').textContent;window.__link=document.querySelector('#original-link');});
   await driver.switchTo().window(optionsHandle);
   const articleTab = await driver.executeScript(async () => (await browser.tabs.query({})).find(t=>t.url?.includes('/article')).id);
-  console.log('Toggle', await driver.executeScript(async id => {await browser.tabs.update(id,{active:true});return browser.tabs.sendMessage(id,{type:'qt-toggle'});},articleTab));
+  // Exercise the popup's public control path, including its content-script
+  // initialization fallback on a freshly loaded page.
+  const toggled = await driver.executeScript(async id => {
+    await browser.tabs.update(id, {active: true});
+    return browser.runtime.sendMessage({type: 'qt-control', tabId: id, action: 'qt-toggle'});
+  }, articleTab);
+  assert.ok(!toggled.error, toggled.error);
   await driver.switchTo().window(articleHandle);
   await driver.wait(()=>driver.executeScript(()=>document.querySelector('#first qt-line')?.shadowRoot.querySelector('.text').dataset.loading==='false'),10000);
   check(await driver.executeScript(()=>document.querySelector('#first').firstChild.textContent===window.__source && document.querySelector('#original-link')===window.__link),'Bilingual reading preserves original text and link identity');

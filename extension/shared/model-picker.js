@@ -30,15 +30,18 @@ export function createModelPicker(root, onSelect = () => {}) {
     if (!shown.length) { const empty = document.createElement('p'); empty.textContent = t('没有匹配项，仍可直接使用手填的模型 ID。'); fragment.append(empty); }
     list.replaceChildren(fragment); active = -1; input.removeAttribute('aria-activedescendant'); list.scrollTop = 0;
   }
-  function open(all = true) {
-    if (!models.length) return;
-    filter = all ? '' : input.value; render();
-    list.hidden = false; input.setAttribute('aria-expanded', 'true'); toggle.setAttribute('aria-expanded', 'true');
+  function position() {
     // Keep the list above the fixed save bar, also in short windows.
     const bounds = input.getBoundingClientRect(), bar = document.querySelector('.save-bar')?.getBoundingClientRect();
     const bottom = Math.min(innerHeight - 12, bar?.top ?? innerHeight - 12), below = bottom - bounds.bottom - 6, above = bounds.top - 12;
     const upward = below < 180 && above > below; root.dataset.upward = String(upward);
     list.style.maxHeight = Math.max(56, Math.min(260, upward ? above : below)) + 'px';
+  }
+  function open(all = true) {
+    if (!models.length) return;
+    filter = all ? '' : input.value; render();
+    list.hidden = false; input.setAttribute('aria-expanded', 'true'); toggle.setAttribute('aria-expanded', 'true');
+    position();
   }
   function choose(index) {
     if (!shown[index]) return;
@@ -62,7 +65,9 @@ export function createModelPicker(root, onSelect = () => {}) {
   list.addEventListener('click', event => { const option = event.target.closest('[role=option]'); if (option) choose(Number(option.dataset.index)); });
   document.addEventListener('pointerdown', event => { if (!root.contains(event.target)) close(); });
   root.addEventListener('focusout', event => { if (!root.contains(event.relatedTarget)) close(); });
-  window.addEventListener('resize', close);
+  // Resize can arrive between ArrowDown and Enter. Keep the highlighted choice
+  // so Enter still selects it instead of submitting a partial search query.
+  window.addEventListener('resize', () => { if (!list.hidden) position(); });
   // No remote text is interpreted as markup or offered as a navigation target.
   return {close, setModels(next) { models = next; toggle.disabled = !models.length; close(); list.replaceChildren(); }};
 }

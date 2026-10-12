@@ -1,6 +1,6 @@
 {
   "name": "quiet-translate",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "private": true,
   "type": "module",
   "description": "A quiet, BYO-API bilingual reading extension for Chromium and Firefox.",
