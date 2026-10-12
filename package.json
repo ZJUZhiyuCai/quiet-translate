@@ -11,7 +11,8 @@
     "lint:firefox": "addons-linter dist/firefox --warnings-as-errors",
     "verify": "npm run check && npm test && npm run package",
     "test:chromium": "node scripts/test-chromium.mjs",
-    "test:firefox": "node scripts/test-firefox.mjs"
+    "test:firefox": "node scripts/test-firefox.mjs",
+    "docs:screenshots": "node scripts/capture-readme.mjs"
   },
   "license": "MIT",
   "author": "ZJUZhiyuCai",

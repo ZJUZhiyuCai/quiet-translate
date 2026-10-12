@@ -18,6 +18,8 @@ For the automated Firefox integration, install Firefox and run `npm run test:fir
 
 For Chromium, `npm run test:chromium` drives a fresh profile through Playwright CLI. Set `QT_CHROMIUM_BINARY` to a browser executable to test a particular browser, and `QT_BROWSER_LOCALE` to `zh-CN` or `en-US` to exercise either interface language (English is the default). The suite includes reading/stress tests, real-page structural fixtures, and frontend state/layout regressions. Each run gets a unique output directory so parallel browser runs do not share a profile. All artifacts go into ignored `output/playwright/`. Browser behavior and reproducible cases are documented in [QA](docs/QA.md).
 
+For README images, `npm run docs:screenshots` captures the current interface in isolated English/Chinese profiles using authored localhost demo translations. Review its output before copying images into `docs/assets/`. See [image provenance and reproduction](docs/assets/README.md); keep mock output separate from live-provider performance claims.
+
 ## What belongs in a PR
 
 - Describe the user-visible problem and resulting behavior.
