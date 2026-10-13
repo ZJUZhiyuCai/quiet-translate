@@ -10,12 +10,15 @@ In Preferences, entering an API key starts model-list discovery after an 800 ms 
 
 Page translation starts after you enable it, or on exact hostnames you add to the auto-translate list. It processes content near the viewport as you scroll. Default selection mode waits for a click; optional instant selection and Alt-hover modes submit selected/hovered passages. Editable fields, standalone code blocks, navigation, hidden content, and explicitly excluded content are skipped by automatic page translation. Review sensitive text before submitting it manually.
 
+**Model speed tests** start only when you click **Test speeds** or press Enter in its filter. They send the fixed sentence “A quiet garden gives us room to read and think.”, a translation instruction, the selected target language, each candidate model ID and the API credential to the configured Chat Completions endpoint. They do not include the private glossary or webpage/workspace text. Each model uses one uncached request, a requested 512-output-token limit and a 20-second deadline; provider usage charges apply. There are at most two concurrent probes, with no automatic retries. Invalid credentials, depleted credits or rate limits stop the remaining batch. Stop, closing the settings page or changing its connection cancels requests. Cookies, referrers and redirects are excluded.
+
 ## What stays in the browser
 
 - Settings and API credentials: extension-origin IndexedDB. They are not browser-synced and are never returned to content scripts or website JavaScript. The credential is not encrypted against someone who controls your OS account/browser profile.
 - Translation cache: up to approximately 4 MB for 7 days, keyed by a hash of source text and translation settings. Values contain translated text; translations can contain personal information. Disable or clear this cache in Preferences. Incognito requests do not write to the persistent cache.
 - Workspace drafts: not automatically persisted. Text explicitly opened from a selection is briefly transferred through browser session storage and removed when the workspace consumes it. Pasted/imported text stays in that tab unless submitted to the API.
 - Discovered model lists: kept only in the current Preferences tab, not exported, synced, or cached on disk. Changing the key, endpoint or authentication mode, selecting a preset, or importing settings discards the list and cancels its request. Closing the tab cancels pending discovery.
+- Speed-test results: temporary status, latency and model IDs in the current settings tab; not exported, synchronized or persisted. Generated sample translations and provider error bodies are not returned to the settings page. Website content scripts cannot start these tests. Choosing a result fills the model draft; saving remains a separate action.
 
 ## Your controls
 

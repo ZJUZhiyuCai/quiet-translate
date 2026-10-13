@@ -10,9 +10,11 @@ English · [简体中文](README.zh-CN.md)
 
 [![CI](https://github.com/ZJUZhiyuCai/quiet-translate/actions/workflows/ci.yml/badge.svg)](https://github.com/ZJUZhiyuCai/quiet-translate/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-397965.svg)](LICENSE)
 
-[**Install with your agent**](INSTALL.md) · [Download v1.4.1](https://github.com/ZJUZhiyuCai/quiet-translate/releases/latest) · [Installation](docs/BROWSERS.md) · [Connect your API](docs/PROVIDERS.md) · [Report a bug](https://github.com/ZJUZhiyuCai/quiet-translate/issues/new/choose)
+[**Install with your agent**](INSTALL.md) · [Download v1.5.0](https://github.com/ZJUZhiyuCai/quiet-translate/releases/latest) · [Installation](docs/BROWSERS.md) · [Connect your API](docs/PROVIDERS.md) · [Report a bug](https://github.com/ZJUZhiyuCai/quiet-translate/issues/new/choose)
 
 ![Bilingual reading on an original demo article](docs/assets/bilingual.png)
+
+**1.5** adds one-click speed tests for your fetched models: filter candidates, compare availability and first-text latency, then choose a result. Shows API usage up front; stop at any time. Non-streaming response times are labeled separately. [Speed-test details →](docs/PROVIDERS.md#compare-model-speeds)
 
 **1.4** fetches model IDs after you enter your API key, with a searchable dropdown and manual entry whenever listing is unavailable. [How discovery works →](docs/PROVIDERS.md#model-discovery)
 
@@ -59,9 +61,9 @@ Chrome, Edge and Comet use the Chromium package. Brave uses the same package but
 
 ### Connect once, then read
 
-Choose a provider and enter your own **API key**. Models load after typing pauses; if host permission is missing, click **Allow & get models**. Open the model dropdown, type to search, and select an ID—or keep typing a manual ID. Click **Save & test connection** to apply and verify it. A successful test offers the text workspace; refresh existing article tabs to enable selection translation.
+Choose a provider and enter your own **API key**. Models load after typing pauses; if host permission is missing, click **Allow & get models**. Open the model dropdown, type to search, and select an ID—or keep typing a manual ID. Optionally use **Test speeds** to compare candidates; each test uses your API credits. **Use** fills your chosen model. Click **Save & test connection** to apply and verify it. A successful test offers the text workspace; refresh existing article tabs to enable selection translation.
 
-![v1.4.0 API setup with a searchable model dropdown and manual model entry](docs/assets/setup-en.png)
+![v1.5.0 API setup with a searchable model dropdown and manual model entry](docs/assets/setup-en.png)
 
 This setup screenshot uses a localhost catalog of demo models, with no personal key and no live-provider connection result. Presets now fill service addresses, starting models where available, and compatibility defaults. Doubao needs your enabled Model ID or endpoint ID; Ollama needs an installed model. [Provider details →](docs/PROVIDERS.md)
 
@@ -88,7 +90,7 @@ Four requests maximum, with capacity reserved for selections. Identical requests
 
 In the **October 12, 2026** live sample with GLM 5.3 Flash, five selections across MDN, Wikipedia, and Paul Graham had **1.344 s median time to first text**, with cache disabled. A 7,167-character workspace sample completed in **11.073 s**. This sample preceded the final typography refinement; it is not a controlled comparison or a speed guarantee. [Measurements and limits →](docs/FRONTEND-QA.md#live-api-sample)
 
-For v1.4.1, Chrome, Edge, and Comet each passed **144 checks** (including 34 model-discovery checks); Firefox passed **14 end-to-end checks**. Coverage includes layout, selection positioning, settings races, onboarding, encrypted migration, and light/dark contrast. Filesystem tests cover install, repeat, update, rejected packages, and rollback. Node tests and reproducible-package checks also pass. [Model-discovery validation →](docs/MODEL-DISCOVERY-QA.md) · [Provider and Mac-label validation →](docs/PROVIDER-PRESETS-QA.md) · [Installation validation →](docs/AGENT-INSTALL-QA.md) · [Frontend validation →](docs/FRONTEND-QA.md) · [Earlier stress and protocol checks →](docs/QA.md)
+For v1.5.0, Chrome, Edge, and Comet each passed **174 checks** (including 34 model-discovery and 30 speed-test checks); Firefox passed **18 end-to-end checks**. Coverage includes layout, selection positioning, settings races, onboarding, encrypted migration, and light/dark contrast. Filesystem tests cover install, repeat, update, rejected packages, and rollback. Node tests and reproducible-package checks also pass. [Speed-test validation →](docs/MODEL-SPEED-QA.md) · [Model-discovery validation →](docs/MODEL-DISCOVERY-QA.md) · [Provider and Mac-label validation →](docs/PROVIDER-PRESETS-QA.md) · [Installation validation →](docs/AGENT-INSTALL-QA.md) · [Frontend validation →](docs/FRONTEND-QA.md) · [Earlier stress and protocol checks →](docs/QA.md)
 
 ## Privacy
 

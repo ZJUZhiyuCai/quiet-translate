@@ -66,3 +66,10 @@ export function providerParameters(settings) {
   if (provider?.id === 'minimax') result.reasoning_split = true;
   return result;
 }
+
+// Keep the settings picker and its speed test on the same reasoning dialect.
+export function settingsForModel(settings, model) {
+  const provider = providerForEndpoint(settings.endpoint);
+  const reset = provider && model !== provider.model && settings.reasoningEffort === provider.reasoningEffort;
+  return {...settings, model, reasoningEffort: reset ? 'default' : settings.reasoningEffort};
+}

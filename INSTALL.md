@@ -85,6 +85,7 @@ The first installation opens Preferences. Choose the provider preset and enter t
 
 - Presets supply endpoint and compatibility defaults; the exact model comes from the user's provider. Never invent a working model or provide the maintainer's API key.
 - Listing models does not save the key or select a model automatically. If discovery is unsupported, unavailable or denied, preserve the existing model and use manual entry. A listed model may still require account access or different compatibility parameters; verify with the connection test. Do not obtain extra cloud administration credentials merely to enumerate models.
+- Model speed tests are optional and billable: the displayed count tells you how many fixed-sentence requests will be made (512 output tokens requested per model, two probes at a time). Filter to relevant candidates before testing; preserve the user’s saved model until they choose a measured result and save. Results are temporary and must not be described as a translation-quality benchmark.
 - Prefer entering the key in the extension's password field. Do not put it in shell arguments, URLs, screenshots, issue reports, or public files.
 - Read another local app's configuration only when the user specifically authorizes that source and provider. Do not scan the machine for credentials.
 - Agents can prepare a **key-free** JSON profile following [the example](examples/preferences.json), then import it in Preferences → Backup & migration. Importing fills a draft; review and save to apply it. Plaintext profiles containing keys are refused.
