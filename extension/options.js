@@ -3,15 +3,14 @@ import {$, send, theme, languageOptions, notify, createTranslation} from './shar
 import {endpointURL} from './shared/core.js';
 import {api as chrome} from './shared/platform.js';
 import {makeProfile, encryptProfile, readProfile, MAX_PROFILE_BYTES} from './shared/profile.js';
-import {PROVIDERS, providerForEndpoint} from './shared/providers.js';
+import {PROVIDERS, providerForEndpoint, settingsForModel} from './shared/providers.js';
 import {createModelDiscovery} from './shared/model-discovery.js';
 const form = $('#preferences-form');
 let settings, test, saving = false, transferring = false, dirty = false, revision = 0, imported = false;
 const field = name => form.elements.namedItem(name);
 const discovery = createModelDiscovery({form, getSaved: () => settings, isImported: () => imported, isBusy: () => saving || transferring,
   onSelect(model) {
-    const provider = providerForEndpoint(field('endpoint').value);
-    if (provider && model !== provider.model && field('reasoningEffort').value === provider.reasoningEffort) field('reasoningEffort').value = 'default';
+    field('reasoningEffort').value = settingsForModel({endpoint: field('endpoint').value, reasoningEffort: field('reasoningEffort').value}, model).reasoningEffort;
   },
 });
 for (const group of [...new Set(PROVIDERS.map(provider => provider.group))]) {
@@ -77,7 +76,7 @@ function hostLines(name) {
   });
 }
 form.addEventListener('input', event => {
-  if (event.target.closest?.('#transfer')) return;
+  if (event.target.closest?.('#transfer, #model-speed')) return;
   if (event.target === field('endpoint')) identifyProvider();
   dirty = true; revision++; saveState('dirty', t("有未保存的修改")); $('#setup-success').hidden = true; preview();
 });

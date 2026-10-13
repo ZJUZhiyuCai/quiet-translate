@@ -2,13 +2,13 @@
 
 The release contains two builds from the same source. They use browser Promise APIs and distinct Manifest V3 background configurations. No account with this project is needed.
 
-| Browser | Package | v1.4.1 validation on Windows, 2026-10-13 |
+| Browser | Package | v1.5.0 validation on Windows, 2026-10-13 |
 |---|---|---|
-| Chrome | `chromium.zip` | 154.0.8037.99: 24 stress/interaction + 12 structural + 28 frontend + 16 installation/migration + 30 provider/Mac-label + 34 model-discovery checks passed |
-| Edge | `chromium.zip` | 156.0.4314.15: the same 144 checks passed |
-| Comet | `chromium.zip` | 139.1.7258.19069: the same 144 checks passed; live model/site testing also recorded |
+| Chrome | `chromium.zip` | 154.0.8037.99: 24 stress/interaction + 12 structural + 28 frontend + 16 installation/migration + 30 provider/Mac-label + 34 model-discovery + 30 speed-test checks passed |
+| Edge | `chromium.zip` | 156.0.4314.15: the same 174 checks passed |
+| Comet | `chromium.zip` | 139.1.7258.19069: the same 174 checks passed; live model/site testing also recorded |
 | Brave | `chromium.zip` | Chromium-compatible build; not independently run in this release |
-| Firefox desktop | `firefox.zip` | 157.0.1: 14 end-to-end checks passed, including model discovery, onboarding, streaming, page restoration, and long text |
+| Firefox desktop | `firefox.zip` | 157.0.1: 18 end-to-end checks passed, including model discovery, onboarding, streaming, page restoration, and long text |
 | Safari | None yet | Requires a separate macOS/Xcode packaging and validation pass |
 | Mobile browsers | None claimed | Touch selection, layout, and background lifecycle have not been validated |
 

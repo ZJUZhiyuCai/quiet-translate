@@ -39,6 +39,16 @@ An unsupported endpoint, denied permission, invalid key, empty list, malformed r
 
 Lists live only in the current settings tab. Changing the key, endpoint, authentication mode or preset discards old results and cancels pending requests. Opening settings and browsing presets do not fetch models; a fetch does not save the key, send article text, or make a translation request. Requests refuse redirects, omit cookies, time out after 12 seconds, and stop at 4 MiB / 2,000 entries / 20 pages. A bounded or externally paginated partial list is labeled as partial, with manual entry still available. See [discovery validation](MODEL-DISCOVERY-QA.md).
 
+## Compare model speeds
+
+After fetching models, optionally enter an ID/name fragment in **Filter models to test**, then click **Test speeds (N)**. The visible count is the number of model requests that will be made. This is a paid API operation when your provider charges for inference; it is never started automatically by discovery. **Stop testing** cancels in-flight requests and the rest of the queue.
+
+Each model translates the same short English sentence into the selected target language, without your glossary or page content. The request uses the same provider dialect and reasoning choice that selecting that model would apply, a 512-output-token budget, no retries, and no cache. Two probes share the normal translation scheduler at low priority, keeping the reserved selection slot free. The timer and 20-second deadline begin when the probe actually starts, excluding local queue time. One benchmark batch can run across settings tabs at a time.
+
+**Available** means a nonempty translation completed in this test. First-text latency measures the first non-whitespace visible content, not HTTP headers, role events or reasoning deltas. Non-streaming models show **Full** response time and rank separately below streaming successes. Partial/truncated responses, reasoning-only output, access errors, unsupported parameters and timeouts are not marked available. A failure under this short budget does not prove a model can never work; review compatibility settings and retry if needed. Invalid-key, balance and rate-limit responses stop queued tests rather than repeating them.
+
+Results sort by first text or model name. **Use** selects the measured model and its tested reasoning setting as a draft; **Save & test connection** applies it. Results are tab-local and disappear when the connection, target language or compatibility controls change. A single short run reflects current network/provider load, not translation quality or sustained throughput. [Validation and limits](MODEL-SPEED-QA.md).
+
 ## Compatibility controls
 
 - **Reasoning effort** defaults to provider behavior for custom connections. DeepSeek, Kimi K2.6 and MiniMax M3 presets turn thinking off through `thinking.type`; SiliconFlow uses `enable_thinking`. GLM 5.3 Flash requires thinking, so its preset uses `reasoning_effort: low`. Qwen 3.8 Flash also starts at low effort. **Thinking off** maps to the documented provider dialect only on recognized endpoints; custom endpoints receive standard `reasoning_effort: none`. If you change to a model with different capabilities, choose **Service default** or the parameter supported by that model. Unsupported parameters typically produce HTTP 400.

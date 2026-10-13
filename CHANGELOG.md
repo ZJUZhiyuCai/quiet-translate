@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.5.0 — 2026-10-13
+
+- One-click speed tests for fetched models, optional filtering, per-model availability and first-visible-text latency, sortable results and a Use action that fills a draft until Save. Non-streaming models show full-response time separately.
+- Each explicit test sends one fixed sentence with a 512-token output budget, no cache or retry, and a 20-second request deadline. Two probes at a time share the translation scheduler at low priority; the selection slot remains reserved. Invalid credentials, depleted balance and rate limits stop the batch.
+- Stop, page close or connection changes abort pending work. Results stay only in the settings tab; changing translation language or compatibility parameters invalidates comparisons. No provider error bodies, generated sample text or credentials enter the results.
+- Add protocol/concurrency and real-browser regression coverage, responsive comparison cards, bilingual setup guidance and refreshed screenshots.
+
 ## 1.4.1 — 2026-10-13
 
 - Preserve the filtered model list and highlighted choice when the window resizes, so a delayed resize event between Arrow and Enter cannot submit a partial model ID. Reposition the dropdown above the save bar without resetting keyboard navigation.

@@ -110,7 +110,7 @@ export function readableError(error) {
 
 export function httpError(status) {
   const messages = {401: t("密钥无效或已过期，请在设置中更新。"), 403: t("当前密钥没有访问权限，请检查服务配置。"), 402: t("服务额度不足，请检查 API 服务账户。"), 404: t("接口或模型不存在，请检查设置。"), 429: t("服务正忙，稍后重试即可。")};
-  return new Error(messages[status] || (status >= 500 ? t("翻译服务暂时不可用，请稍后重试。") : t("翻译请求未被接受（{0}），请检查模型与接口设置。", status)));
+  return Object.assign(new Error(messages[status] || (status >= 500 ? t("翻译服务暂时不可用，请稍后重试。") : t("翻译请求未被接受（{0}），请检查模型与接口设置。", status))), {status});
 }
 
 export function abortError() { return new DOMException('Aborted', 'AbortError'); }

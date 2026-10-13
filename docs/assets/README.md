@@ -4,14 +4,14 @@
 
 Captured on October 12, 2026 in Comet 139.1.7258.19069 on Windows, using the actual v1.3.0 extension with separate disposable English and Chinese profiles. The page is the original [Fieldnotes fixture](../../tests/fixtures/article.html). Chinese translations are [authored demo text](../../tests/fixtures/readme-translations.json), replayed through a localhost OpenAI-compatible SSE endpoint.
 
-The two **setup** screenshots were refreshed on October 13, 2026 using **v1.4.0 in Chrome 154.0.8037.99**, again in disposable Chinese/English profiles. They show the new model dropdown populated by a localhost GET response containing three `demo-*` IDs. No private key or live-provider catalog was used. Reading, selection and workspace screenshots retain the v1.3.0 capture above.
+The two **setup** screenshots were refreshed on October 13, 2026 using **v1.5.0 in Chrome 154.0.8037.99**, again in disposable Chinese/English profiles. They show the new model dropdown populated by a localhost GET response containing three `demo-*` IDs. No private key or live-provider catalog was used. Reading, selection and workspace screenshots retain the v1.3.0 capture above.
 
 | Image | Contents |
 |---|---|
 | `bilingual.png` | English passages with Chinese translations underneath; shared by both READMEs |
 | `selection-en.png` / `selection.png` | Pinned selection card with English / Chinese controls, captured with the surrounding source paragraph |
 | `workspace-en.png` / `workspace.png` | English / Chinese workspace with a complete translation beside the original |
-| `setup-en.png` / `setup.png` | v1.4.0 API settings with model discovery, an editable dropdown and Save & test connection; localhost demo catalog, no live-provider test result |
+| `setup-en.png` / `setup.png` | v1.5.0 API settings with model discovery, an editable dropdown, speed-test controls and Save & test connection; localhost demo catalog, no live-provider test result |
 
 The model label `demo-replay` identifies this local fixture, not a hosted model or a bundled translation account. Selection and workspace screenshots show real cache hits after the demo responses pass through the extension. No latency label has been edited into the images. These are interface demonstrations, not live-provider output, benchmarks, or customer testimonials. They contain no personal browser tabs, browsing data, or credentials. Fonts depend on the operating system and installed faces.
 

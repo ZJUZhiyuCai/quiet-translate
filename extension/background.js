@@ -5,11 +5,12 @@ import {TranslationEngine} from './shared/engine.js';
 import {SettingsStore} from './shared/settings.js';
 import {api as chrome} from './shared/platform.js';
 import {modelConnection, fetchModels} from './shared/models.js';
+import {benchmarkPlan, runBenchmark} from './shared/model-benchmark.js';
 
 const cache = new TranslationCache();
 const engine = new TranslationEngine(cache);
 const settingsStore = new SettingsStore();
-let settings;
+let settings, benchmarkSession;
 const ready = (async () => {
   await chrome.storage.local.setAccessLevel?.({accessLevel: 'TRUSTED_CONTEXTS'});
   await chrome.storage.session.setAccessLevel?.({accessLevel: 'TRUSTED_CONTEXTS'});
@@ -108,6 +109,33 @@ chrome.runtime.onMessage.addListener((message, sender, reply) => {
 });
 
 chrome.runtime.onConnect.addListener(port => {
+  if (port.name === 'qt-benchmark') {
+    if (!trusted(port.sender)) { port.disconnect(); return; }
+    const controller = new AbortController(); let started = false, disconnected = false, pulse;
+    const post = value => { if (!disconnected) try { port.postMessage(value); } catch {} };
+    port.onDisconnect.addListener(() => { disconnected = true; controller.abort(); clearInterval(pulse); });
+    port.onMessage.addListener(message => {
+      if (message?.type === 'cancel') { controller.abort(); return; }
+      if (started || message?.type !== 'start') return;
+      started = true;
+      (async () => {
+        await ready;
+        const plan = benchmarkPlan(message.settings, message.models, settings);
+        if (!await chrome.permissions.contains({origins: [new URL(plan.settings.endpoint).origin + '/*']})) throw new Error(t('请先允许访问此接口，再开始测速。'));
+        if (controller.signal.aborted) return;
+        if (benchmarkSession) throw new Error(t('另一个设置页正在测速，请先停止它。'));
+        benchmarkSession = controller;
+        pulse = setInterval(() => post({type: 'heartbeat'}), 10000);
+        const result = await runBenchmark(plan, {signal: controller.signal, scheduler: engine.scheduler, onResult: result => post({type: 'result', result})});
+        post({type: 'done', ...result});
+      })().catch(error => post({type: 'error', error: readableError(error)})).finally(() => {
+        clearInterval(pulse);
+        if (benchmarkSession === controller) benchmarkSession = null;
+        port.disconnect();
+      }).catch(() => {});
+    });
+    return;
+  }
   if (port.name === 'qt-models') {
     if (!trusted(port.sender)) { port.disconnect(); return; }
     const controller = new AbortController(); let started = false;
