@@ -37,7 +37,7 @@
   ],
   "devDependencies": {
     "@playwright/cli": "0.1.22",
-    "addons-linter": "10.14.0",
-    "selenium-webdriver": "4.51.0"
+    "addons-linter": "10.15.0",
+    "selenium-webdriver": "4.52.0"
   }
 }
